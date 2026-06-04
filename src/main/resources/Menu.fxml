@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MenuController">
+   <children>
+      <VBox fx:id="vboxRetirar" alignment="TOP_CENTER" cache="true" layoutX="106.0" layoutY="259.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="350.0" AnchorPane.leftAnchor="106.0">
+         <children>
+            <ImageView fitHeight="239.0" fitWidth="347.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/retirarDinero.png" />
+               </image>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+            <Label text="RETIRAR DINERO ">
+               <font>
+                  <Font name="System Bold" size="37.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <VBox fx:id="vboxTransferencia" alignment="TOP_CENTER" cache="true" layoutX="586.0" layoutY="259.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="350.0">
+         <children>
+            <ImageView fitHeight="239.0" fitWidth="347.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/share.png" />
+               </image>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+            <Label text="TRANSFERENCIA">
+               <font>
+                  <Font name="System Bold" size="37.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <VBox fx:id="vboxCambiarPin" alignment="TOP_CENTER" cache="true" layoutX="1042.0" layoutY="259.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="350.0">
+         <children>
+            <ImageView fitHeight="239.0" fitWidth="347.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/pin.png" />
+               </image>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+            <Label text="CAMBIAR PIN">
+               <font>
+                  <Font name="System Bold" size="37.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <VBox fx:id="vboxHistorial" alignment="TOP_CENTER" cache="true" layoutX="1465.0" layoutY="259.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="350.0">
+         <children>
+            <ImageView fitHeight="239.0" fitWidth="347.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/history.png" />
+               </image>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+            <Label text="HISTORIAL">
+               <font>
+                  <Font name="System Bold" size="37.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <VBox fx:id="vboxSaldo" alignment="TOP_CENTER" cache="true" layoutX="106.0" layoutY="666.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="350.0">
+         <children>
+            <ImageView fitHeight="239.0" fitWidth="347.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/SALDOCUENTAS.png" />
+               </image>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+            <Label text="SALDO / CUENTAS">
+               <font>
+                  <Font name="System Bold" size="37.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <VBox fx:id="vboxBloquear" alignment="TOP_CENTER" cache="true" layoutX="604.0" layoutY="666.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="350.0">
+         <children>
+            <ImageView fitHeight="239.0" fitWidth="347.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/BLOQUEARCUENTA.png" />
+               </image>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+            <Label text="BLOQUEAR CUENTA">
+               <font>
+                  <Font name="System Bold" size="34.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <VBox fx:id="vboxCerrarSesion" alignment="TOP_CENTER" cache="true" layoutX="1053.0" layoutY="659.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="350.0">
+         <children>
+            <ImageView fitHeight="239.0" fitWidth="347.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/CERRARSESIÓN.png" />
+               </image>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+            <Label text="CERRAR SESIÓN">
+               <font>
+                  <Font name="System Bold" size="40.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <AnchorPane layoutX="98.0" layoutY="26.0" prefHeight="200.0" prefWidth="1698.0">
+         <children>
+            <VBox alignment="TOP_CENTER" layoutX="384.0" layoutY="30.0" prefHeight="170.0" prefWidth="840.0">
+               <children>
+                  <Label fx:id="lblBienvenidaMenu" alignment="TOP_CENTER" text="HOLA, USUARIO">
+                     <font>
+                        <Font name="System Bold" size="96.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblInstruccionesMenu" text="¿En qué operaciones financieras podemos asistirle hoy? ">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <HBox layoutX="1339.0" layoutY="24.0" prefHeight="100.0" prefWidth="200.0" />
+            <ImageView fitHeight="159.0" fitWidth="227.0" layoutX="1233.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/ATM.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
