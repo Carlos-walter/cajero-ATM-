@@ -78,9 +78,9 @@
                <Font size="70.0" />
             </font>
          </Button>
-         <Button fx:id="btnEntrar" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEntrar" text="ENTRAR-&gt;" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <Button fx:id="btnEntrar" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEntrar" text="CONFIRMAR" GridPane.columnIndex="2" GridPane.rowIndex="3">
             <font>
-               <Font name="System Bold Italic" size="40.0" />
+               <Font name="System Bold Italic" size="36.0" />
             </font>
          </Button>
          <Button fx:id="btnBorrar" layoutX="160.0" layoutY="184.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleBorrar" text="BORRAR" textFill="#bd0209" GridPane.rowIndex="3">

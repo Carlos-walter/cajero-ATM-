@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RetirarDineroController">
+   <children>
+      <GridPane fx:id="contdinero" alignment="TOP_CENTER" hgap="15.0" layoutX="61.0" layoutY="232.0" prefHeight="670.0" prefWidth="844.0" vgap="15.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="btnMonto10" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#montoRapido" text="S/ 10" textFill="#011e3f">
+               <font>
+                  <Font name="System Bold" size="70.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnMonto20" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#montoRapido" text="S/ 20" textFill="#011e3f" GridPane.columnIndex="1">
+               <font>
+                  <Font name="System Bold" size="70.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnMonto50" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#montoRapido" text="S/ 50" textFill="#011e3f" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="70.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnMonto100" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#montoRapido" text="S/ 100" textFill="#011e3f" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="70.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnMonto200" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#montoRapido" text="S/ 200" textFill="#011e3f" GridPane.rowIndex="2">
+               <font>
+                  <Font name="System Bold" size="70.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnMontoLimpiar" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#limpiarMonto" text="LIMPIAR MONTO" textFill="#bf030b" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font name="System Bold" size="42.0" />
+               </font>
+            </Button>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </GridPane>
+      <VBox fx:id="txtdinero" layoutX="67.0" layoutY="938.0" prefHeight="87.0" prefWidth="852.0">
+         <children>
+            <Label fx:id="txtMesajefinal" text="Saldo Disponible Estimado:" textFill="#4f5d74">
+               <font>
+                  <Font size="44.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <Label fx:id="txtBienvenido" layoutX="61.0" layoutY="42.0" text="Seleccione el monto a retirar">
+         <font>
+            <Font name="System Bold" size="48.0" />
+         </font>
+      </Label>
+      <Label fx:id="txtSubmonto" layoutX="67.0" layoutY="110.0" text="Seleccione un monto pre-configurado de retiro rápido o ingrese el importe exacto en el teclado numérico." textFill="#4f5d74">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="txtsadoS" layoutX="1169.0" layoutY="182.0" text="Ingresar Otro Monto (Billetes de S/ 10, 20, 50, 100)">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtMonto" alignment="TOP_CENTER" layoutX="1009.0" layoutY="232.0" prefHeight="65.0" prefWidth="842.0" text="S/ 0.000">
+         <font>
+            <Font size="45.0" />
+         </font></TextField>
+      <HBox fx:id="contTeclado" layoutX="1009.0" layoutY="323.0" prefHeight="579.0" prefWidth="842.0">
+         <children>
+            <fx:include fx:id="teclado" source="Teclado.fxml" />
+         </children>
+      </HBox>
+
+   </children>
+</AnchorPane>
