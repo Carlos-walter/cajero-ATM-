@@ -17,16 +17,31 @@ public class RetirarDineroController implements TecladoListener {
     @FXML
     private TecladoController tecladoController;
 
-    // Simulación temporal
-    private double saldoDisponible = 500.0;
+    /**
+     * Saldo disponible temporal.
+     *
+     * En una aplicación real este valor
+     * vendría desde la base de datos.
+     */
+    private int saldoDisponible = 500;
+
+    /**
+     * Texto mostrado cuando aún no se ha ingresado un monto.
+     */
+    private static final String MONTO_INICIAL = "S/ 0.00";
 
     @FXML
     public void initialize() {
 
         if (tecladoController != null) {
+
             tecladoController.setListener(this);
+
             System.out.println("Teclado conectado");
         }
+
+        // Mostrar monto inicial en pantalla.
+        txtMonto.setText(MONTO_INICIAL);
 
         txtMesajefinal.setText(
                 "Saldo Disponible: S/ " + saldoDisponible
@@ -34,8 +49,10 @@ public class RetirarDineroController implements TecladoListener {
     }
 
     /**
-     * Botones rápidos:
-     * S/10, S/20, S/50, S/100, S/200
+     * Botones de retiro rápido.
+     *
+     * Permiten seleccionar un monto sin
+     * necesidad de utilizar el teclado.
      */
     @FXML
     public void montoRapido(ActionEvent event) {
@@ -48,55 +65,88 @@ public class RetirarDineroController implements TecladoListener {
         txtMonto.setText(valor);
 
         System.out.println(
-                "Monto seleccionado: " + valor
+                "Monto seleccionado: S/ " + valor
         );
     }
 
     /**
-     * Limpia el cuadro de texto.
+     * Limpia el monto ingresado y vuelve
+     * a mostrar el valor inicial.
      */
     @FXML
     public void limpiarMonto() {
 
-        txtMonto.clear();
+        txtMonto.setText(MONTO_INICIAL);
 
         txtMesajefinal.setText(
-                "Monto limpiado"
+                "Ingrese un nuevo monto."
         );
     }
 
-    // ======================
-    // TECLADO NUMÉRICO
-    // ======================
 
     @Override
     public void onDigito(String digito) {
 
-        txtMonto.appendText(digito);
+        String texto = txtMonto.getText();
+
+        if (texto.equals(MONTO_INICIAL)) {
+
+            txtMonto.setText(digito);
+
+        } else {
+
+            txtMonto.appendText(digito);
+        }
     }
 
+    /**
+     * Borra únicamente el último carácter.
+     *
+     * Si el campo queda vacío, vuelve al
+     * valor inicial "S/ 0.00".
+     */
     @Override
     public void onBorrar() {
 
         String texto = txtMonto.getText();
 
+        if (texto.equals(MONTO_INICIAL)) {
+            return;
+        }
+
         if (!texto.isEmpty()) {
 
-            txtMonto.setText(
-                    texto.substring(0, texto.length() - 1)
-            );
+            texto = texto.substring(0, texto.length() - 1);
+
+            if (texto.isEmpty()) {
+
+                txtMonto.setText(MONTO_INICIAL);
+
+            } else {
+
+                txtMonto.setText(texto);
+            }
         }
     }
 
+    /**
+     * Procesa el retiro de dinero.
+     *
+     * Validaciones:
+     * 1. Debe ingresarse un monto.
+     * 2. El monto debe ser mayor que cero.
+     * 3. El cajero no trabaja con monedas.
+     */
     @Override
     public void onEntrar() {
 
         String texto = txtMonto.getText();
 
-        if (texto.isBlank()) {
+        if (texto.equals(MONTO_INICIAL)
+                || texto.isBlank()) {
 
             txtMesajefinal.setText(
-                    "Ingrese un monto"
+                    "Ingrese un monto."
             );
 
             return;
@@ -104,12 +154,21 @@ public class RetirarDineroController implements TecladoListener {
 
         try {
 
-            double monto = Double.parseDouble(texto);
+            int monto = Integer.parseInt(texto);
 
             if (monto <= 0) {
 
                 txtMesajefinal.setText(
-                        "Monto inválido"
+                        "Monto inválido."
+                );
+
+                return;
+            }
+
+            if (monto % 10 != 0) {
+
+                txtMesajefinal.setText(
+                        "El cajero no trabaja con monedas."
                 );
 
                 return;
@@ -118,25 +177,27 @@ public class RetirarDineroController implements TecladoListener {
             if (monto > saldoDisponible) {
 
                 txtMesajefinal.setText(
-                        "Saldo insuficiente"
+                        "Saldo insuficiente."
                 );
 
                 return;
             }
 
+            // Descontar dinero del saldo.
             saldoDisponible -= monto;
 
             txtMesajefinal.setText(
-                    "Retiro exitoso. Saldo: S/ "
+                    "Retiro exitoso. Saldo restante: S/ "
                             + saldoDisponible
             );
 
-            txtMonto.clear();
+            // Volver al valor inicial.
+            txtMonto.setText(MONTO_INICIAL);
 
         } catch (NumberFormatException e) {
 
             txtMesajefinal.setText(
-                    "Ingrese un número válido"
+                    "Ingrese únicamente números."
             );
         }
     }
