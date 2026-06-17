@@ -7,9 +7,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class CambiarPinController implements TecladoListener {
+
+    /**
+     * Estados del flujo de cambio de PIN.
+     */
+    private enum EstadoCambioPin {
+        VALIDAR_PIN_ACTUAL,
+        INGRESAR_NUEVO_PIN,
+        CONFIRMAR_NUEVO_PIN,
+        FINALIZADO
+    }
+
+    @FXML
+    private Text Pinactual;
 
     @FXML
     private PasswordField txtPin;
@@ -25,11 +39,25 @@ public class CambiarPinController implements TecladoListener {
 
     /**
      * PIN actual simulado.
-     *
-     * Más adelante este valor deberá
-     * obtenerse desde la base de datos.
+     * Más adelante debe venir desde la base de datos.
      */
-    private final String pinActualSistema = "1234";
+    private String pinActualSistema = "1234";
+
+    /**
+     * Guarda temporalmente el nuevo PIN
+     * mientras el usuario lo confirma.
+     */
+    private String pinNuevoTemporal = "";
+
+    /**
+     * Estado actual del flujo.
+     */
+    private EstadoCambioPin estado = EstadoCambioPin.VALIDAR_PIN_ACTUAL;
+
+    /**
+     * Máximo de dígitos permitidos para el PIN.
+     */
+    private static final int MAX_DIGITOS = 4;
 
     /**
      * Inicializa la pantalla.
@@ -38,14 +66,45 @@ public class CambiarPinController implements TecladoListener {
     public void initialize() {
 
         if (tecladoController != null) {
-
             tecladoController.setListener(this);
-
             System.out.println("Teclado conectado");
         }
 
         txtPin.clear();
         lblMensaje.setText("");
+        estado = EstadoCambioPin.VALIDAR_PIN_ACTUAL;
+        actualizarInstruccion();
+    }
+
+    /**
+     * Actualiza el texto superior según el paso actual.
+     */
+    private void actualizarInstruccion() {
+
+        switch (estado) {
+            case VALIDAR_PIN_ACTUAL:
+                Pinactual.setText("1. Ingrese su PIN de seguridad actual");
+                break;
+
+            case INGRESAR_NUEVO_PIN:
+                Pinactual.setText("2. Ingrese su nueva clave");
+                break;
+
+            case CONFIRMAR_NUEVO_PIN:
+                Pinactual.setText("3. Repita su nueva clave");
+                break;
+
+            case FINALIZADO:
+                Pinactual.setText("PIN cambiado correctamente");
+                break;
+        }
+    }
+
+    /**
+     * Verifica si el texto ingresado contiene exactamente 4 dígitos.
+     */
+    private boolean esPinValido(String pin) {
+        return pin != null && pin.matches("\\d{4}");
     }
 
     // ==========================
@@ -54,17 +113,17 @@ public class CambiarPinController implements TecladoListener {
 
     /**
      * Agrega un dígito al PIN.
-     *
-     * El PIN tiene un máximo de 4 dígitos.
      */
     @Override
     public void onDigito(String digito) {
 
-        // Limpia mensajes anteriores
+        if (estado == EstadoCambioPin.FINALIZADO) {
+            return;
+        }
+
         lblMensaje.setText("");
 
-        if (txtPin.getText().length() < 4) {
-
+        if (txtPin.getText().length() < MAX_DIGITOS) {
             txtPin.appendText(digito);
         }
     }
@@ -75,69 +134,90 @@ public class CambiarPinController implements TecladoListener {
     @Override
     public void onBorrar() {
 
+        if (estado == EstadoCambioPin.FINALIZADO) {
+            return;
+        }
+
         String texto = txtPin.getText();
 
         if (!texto.isEmpty()) {
-
-            txtPin.setText(
-                    texto.substring(0, texto.length() - 1)
-            );
+            txtPin.setText(texto.substring(0, texto.length() - 1));
         }
     }
 
     /**
-     * Confirma el PIN actual.
+     * Acción principal del teclado.
      *
-     * Validaciones:
-     * 1. No puede estar vacío.
-     * 2. Debe tener exactamente 4 dígitos.
-     * 3. Debe coincidir con el PIN registrado.
+     * Flujo:
+     * 1. Validar PIN actual.
+     * 2. Pedir nuevo PIN.
+     * 3. Confirmar nuevo PIN.
+     * 4. Guardar el cambio.
      */
     @Override
     public void onEntrar() {
 
+        if (estado == EstadoCambioPin.FINALIZADO) {
+            lblMensaje.setText("El PIN ya fue cambiado.");
+            return;
+        }
+
         String pinIngresado = txtPin.getText();
 
         if (pinIngresado.isBlank()) {
-
-            lblMensaje.setText(
-                    "Ingrese su PIN actual."
-            );
-
+            lblMensaje.setText("Ingrese un PIN.");
             return;
         }
 
-        if (pinIngresado.length() != 4) {
-
-            lblMensaje.setText(
-                    "El PIN debe tener 4 dígitos."
-            );
-
+        if (!esPinValido(pinIngresado)) {
+            lblMensaje.setText("El PIN debe tener 4 dígitos numéricos.");
             return;
         }
 
-        if (!pinIngresado.equals(pinActualSistema)) {
+        switch (estado) {
 
-            lblMensaje.setText(
-                    "PIN incorrecto."
-            );
+            case VALIDAR_PIN_ACTUAL:
+                if (!pinIngresado.equals(pinActualSistema)) {
+                    lblMensaje.setText("PIN incorrecto.");
+                    txtPin.clear();
+                    return;
+                }
 
-            txtPin.clear();
+                lblMensaje.setText("PIN correcto. Ingrese su nueva clave.");
+                txtPin.clear();
+                estado = EstadoCambioPin.INGRESAR_NUEVO_PIN;
+                actualizarInstruccion();
+                break;
 
-            return;
+            case INGRESAR_NUEVO_PIN:
+                pinNuevoTemporal = pinIngresado;
+                txtPin.clear();
+                estado = EstadoCambioPin.CONFIRMAR_NUEVO_PIN;
+                lblMensaje.setText("Repita la nueva clave.");
+                actualizarInstruccion();
+                break;
+
+            case CONFIRMAR_NUEVO_PIN:
+                if (!pinIngresado.equals(pinNuevoTemporal)) {
+                    lblMensaje.setText("Las claves no coinciden. Ingrese la nueva clave otra vez.");
+                    txtPin.clear();
+                    estado = EstadoCambioPin.INGRESAR_NUEVO_PIN;
+                    actualizarInstruccion();
+                    return;
+                }
+
+                // Cambio confirmado
+                pinActualSistema = pinNuevoTemporal;
+                pinNuevoTemporal = "";
+                txtPin.clear();
+                estado = EstadoCambioPin.FINALIZADO;
+                lblMensaje.setText("PIN cambiado correctamente.");
+                actualizarInstruccion();
+                break;
+
+            default:
+                break;
         }
-
-        lblMensaje.setText(
-                "PIN verificado correctamente."
-        );
-
-        System.out.println(
-                "PIN correcto. Ir al paso 2."
-        );
-
-        // TODO:
-        // Abrir pantalla NuevoPin.fxml
-        // para ingresar el nuevo PIN.
     }
 
     /**
@@ -147,25 +227,17 @@ public class CambiarPinController implements TecladoListener {
     public void volverMenu() {
 
         try {
-
             Parent root = FXMLLoader.load(
                     getClass().getResource("/Menu.fxml")
             );
 
-            Stage stage = (Stage) btnCancelar
-                    .getScene()
-                    .getWindow();
-
+            Stage stage = (Stage) btnCancelar.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
-            lblMensaje.setText(
-                    "Error al volver al menú."
-            );
+            lblMensaje.setText("Error al volver al menú.");
         }
     }
 }

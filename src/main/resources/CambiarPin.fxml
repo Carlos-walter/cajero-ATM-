@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CambiarPinController">
    <children>
-      <Text fx:id="CambiasPIn" fill="#011e40" layoutX="688.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cambiar PIN " wrappingWidth="520.64990234375">
+      <Text fx:id="CambiasPIn" fill="#011e40" layoutX="562.0" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cambiar PIN " textAlignment="CENTER" wrappingWidth="854.64990234375">
          <font>
             <Font name="System Bold" size="80.0" />
          </font>

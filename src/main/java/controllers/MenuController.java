@@ -116,12 +116,13 @@ public class MenuController {
             );
         }
 
+        // ==========================
+// BLOQUEAR CUENTA
+// ==========================
         if (vboxBloquear != null) {
 
             vboxBloquear.setOnMouseClicked(
-                    event -> System.out.println(
-                            "Bloquear Cuenta - Pendiente"
-                    )
+                    event -> abrirBloquearCuenta()
             );
         }
     }
@@ -151,6 +152,11 @@ public class MenuController {
     private void abrirTransferencia() {
 
         cambiarPantalla("/Transferencia.fxml");
+    }
+    //  Abre la pantalla de BloquearCuenta
+    private void abrirBloquearCuenta() {
+
+        cambiarPantalla("/BloquearCuenta.fxml");
     }
 
     /**
