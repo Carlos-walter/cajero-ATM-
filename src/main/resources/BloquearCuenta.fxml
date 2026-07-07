@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane fx:id="paneBloquearCuenta" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BloquearCuentaController">
    <children>
       <ImageView fx:id="imgAdvertenciaDerecha" fitHeight="258.0" fitWidth="295.0" layoutX="1367.0" layoutY="133.0" pickOnBounds="true" preserveRatio="true">
@@ -35,7 +34,6 @@
             <Font size="30.0" />
          </font>
       </Label>
-      <Label text="Label" />
       <Label fx:id="lblInformacionBloqueop2" layoutX="444.0" layoutY="540.0" text="reactivada presencialmente por usted en una sucursal física de atención del">
          <font>
             <Font size="30.0" />

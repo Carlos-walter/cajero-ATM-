@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="paneTransferenciaPaso2" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.TransferenciaPaso2Controller">
+   <children>
+      <Label fx:id="lblPaso1" layoutX="105.0" layoutY="66.0" prefHeight="47.0" prefWidth="173.0" text="Paso 1  &gt; " textFill="#505f76">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblPaso2" layoutX="306.0" layoutY="66.0" prefHeight="47.0" prefWidth="173.0" text="Paso 2  &gt;" textFill="#001e40">
+         <font>
+            <Font name="System Bold" size="35.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblPaso3" layoutX="505.0" layoutY="66.0" prefHeight="47.0" prefWidth="173.0" text="Paso 3  &gt; " textFill="#505f76">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblTerminado" layoutX="742.0" layoutY="66.0" prefHeight="51.0" prefWidth="202.0" text="Terminado" textFill="#505f76">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblTitulo" contentDisplay="CENTER" layoutX="678.0" layoutY="226.0" prefHeight="81.0" prefWidth="689.0" text="Paso 2: Verificar Datos" textFill="#002042" textOverrun="CLIP">
+         <font>
+            <Font name="System Bold" size="50.0" />
+         </font>
+      </Label>
+      <AnchorPane fx:id="paneDatosDestinatario" layoutX="367.0" layoutY="313.0" prefHeight="743.0" prefWidth="1312.0">
+         <children>
+            <ImageView fx:id="imgDestinatario" fitHeight="182.0" fitWidth="190.0" layoutX="35.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/user-round-check.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="lblDestinatarioDetectado" layoutX="243.0" layoutY="95.0" prefHeight="51.0" prefWidth="493.0" text="Destinatario Detectado" textFill="#001e40">
+               <font>
+                  <Font name="System Bold" size="40.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblCanalSeguro" layoutX="243.0" layoutY="155.0" text="Canal Centralizado Seguro ✓" textFill="#0c805d">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Separator layoutX="24.0" layoutY="234.0" prefHeight="0.0" prefWidth="1090.0" />
+            <Label fx:id="lblTituloTitular" layoutX="243.0" layoutY="274.0" text="TITULAR:">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblTitular" layoutX="620.0" layoutY="274.0" prefHeight="48.0" prefWidth="453.0">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblTituloCuenta" layoutX="243.0" layoutY="333.0" text="CBU :">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblTituloBanco" layoutX="243.0" layoutY="393.0" text="ENTIDAD BANCO:">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblTituloTipoCuenta" layoutX="243.0" layoutY="454.0" text="TIPO CUENTA:">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblBanco" layoutX="620.0" layoutY="393.0" prefHeight="48.0" prefWidth="453.0">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblTipoCuenta" layoutX="620.0" layoutY="454.0" prefHeight="48.0" prefWidth="453.0">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblCuentaDestino" layoutX="620.0" layoutY="333.0" prefHeight="48.0" prefWidth="453.0">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnCorregir" layoutX="314.0" layoutY="614.0" mnemonicParsing="false" onAction="#volverPaso1" prefHeight="81.0" prefWidth="316.0" text="NO, CORREGIR">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnConfirmar" layoutX="718.0" layoutY="611.0" mnemonicParsing="false" onAction="#continuarPaso3" prefHeight="88.0" prefWidth="316.0" text="SÍ, ES CORRECTO">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Button>
+            <Label fx:id="lblConfirmacion" alignment="TOP_CENTER" layoutX="321.0" layoutY="557.0" prefHeight="51.0" prefWidth="717.0" text="¿LOS DATOS SON CORRECTOS?">
+               <font>
+                  <Font name="System Bold" size="40.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

@@ -51,22 +51,71 @@ public class LoginController implements TecladoListener {
             PasswordField.setText(texto.substring(0, texto.length() - 1));
         }
     }
-
+    /**
+     * Valida el PIN ingresado.
+     *
+     * Flujo actual:
+     * 1. Compara el PIN ingresado con el PIN simulado.
+     * 2. Si es correcto, reinicia el contador de intentos
+     *    y abre el menú principal.
+     * 3. Si es incorrecto, incrementa el contador de intentos,
+     *    limpia el campo y ejecuta una animación de error.
+     * 4. Al tercer intento fallido, la cuenta queda bloqueada
+     *    y se muestra la pantalla de bloqueo.
+     *
+     * FUTURO (Base de Datos):
+     * 1. Buscar la cuenta mediante el DNI ingresado.
+     * 2. Obtener el PIN almacenado.
+     * 3. Comparar el PIN ingresado con el registrado.
+     * 4. Actualizar el número de intentos fallidos.
+     * 5. Si llega a 3 intentos:
+     *
+     *    UPDATE cuentas
+     *    SET estado = 'BLOQUEADA'
+     *    WHERE id_cuenta = ?
+     *
+     * 6. Mostrar CuentaBloqueada.fxml.
+     */
     @Override
     public void onEntrar() {
-        if (PasswordField.getText().equals(PIN_CORRECTO)) {
-            intentosFallidos = 0;
-            cambiarEscena("Menu.fxml");
-        } else {
-            intentosFallidos++;
-            vibrarInterfaz();
-            PasswordField.clear();
 
-            if (intentosFallidos >= 3) {
-                lblBienvenidaPIN.setText("CUENTA BLOQUEADA ");
-                lblBienvenidaPIN.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-            }
+        String pinIngresado = PasswordField.getText();
+
+        if (pinIngresado.equals(PIN_CORRECTO)) {
+
+            intentosFallidos = 0;
+
+            cambiarEscena("Menu.fxml");
+
+            return;
         }
+
+        intentosFallidos++;
+
+        vibrarInterfaz();
+
+        PasswordField.clear();
+
+        if (intentosFallidos >= 3) {
+
+            lblBienvenidaPIN.setText(
+                    "CUENTA BLOQUEADA"
+            );
+
+            lblBienvenidaPIN.setStyle(
+                    "-fx-text-fill:red; -fx-font-weight:bold;"
+            );
+
+            cambiarEscena("CuentaBloqueada.fxml");
+
+            return;
+        }
+
+        lblBienvenidaPIN.setText(
+                "PIN incorrecto. Intento "
+                        + intentosFallidos
+                        + " de 3."
+        );
     }
 
     /**

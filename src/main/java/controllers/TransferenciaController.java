@@ -173,6 +173,53 @@ public class TransferenciaController implements TecladoListener {
         );
 
         // TODO:
-        // abrir TransferenciaPaso2.fxml
+// SELECT * FROM cuentas WHERE numero_cuenta = ?
+
+        System.out.println(
+                "Cuenta ingresada: " + cuenta
+        );
+
+// FUTURO:
+// Guardar el número de cuenta para que el Paso 2
+// pueda consultar la base de datos.
+
+        cambiarPantalla("/TransferenciaPaso2.fxml");
+    }
+    /**
+     * Cambia entre pantallas.
+     *
+     * @param rutaFxml Ruta del archivo FXML.
+     */
+
+
+
+
+    private void cambiarPantalla(String rutaFxml) {
+
+        try {
+
+            Parent root = FXMLLoader.load(
+                    getClass().getResource(rutaFxml)
+            );
+
+            Stage stage = (Stage)
+                    btnCancelar
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(
+                    new Scene(root)
+            );
+
+            stage.show();
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al abrir: " + rutaFxml
+            );
+
+            e.printStackTrace();
+        }
     }
 }
