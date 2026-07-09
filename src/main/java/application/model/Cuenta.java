@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Cuenta {
-    private String numeroCuenta;
+    private final String numeroCuenta;
     private double saldo;
-    private List<Transaccion> transacciones;
-    private Usuario propietario;
-    private String tipo;
+    private final List<Transaccion> transacciones;
+    private final Usuario propietario;
+    private final String tipo;
 
     public Cuenta(String numeroCuenta, String tipo, double saldo, Usuario propietario) {
         this.numeroCuenta = numeroCuenta;

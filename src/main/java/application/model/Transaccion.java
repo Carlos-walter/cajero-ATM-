@@ -1,15 +1,17 @@
 package application.model;
-
+import org.bson.Document;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class Transaccion {
-    private TipoTransaccion tipoTransaccion;
-    private LocalDateTime fechaTransaccion;
-    private double monto;
-    private String cuentaOrigen;
-    private String cuentaDestino;
-    private String id;
+    private final TipoTransaccion tipoTransaccion;
+    private final LocalDateTime fechaTransaccion;
+    private final double monto;
+    private final String cuentaOrigen;
+    private final String cuentaDestino;
+    private final String id;
 
     public Transaccion(TipoTransaccion tipoTransaccion, double monto, String cuentaOrigen, String cuentaDestino) {
         this.id = generarID();
@@ -19,6 +21,16 @@ public class Transaccion {
         this.cuentaOrigen = cuentaOrigen;
         this.cuentaDestino = cuentaDestino;
     }
+
+    public Transaccion(String id, TipoTransaccion tipoTransaccion, LocalDateTime fechaTransaccion, double monto, String cuentaOrigen, String cuentaDestino) {
+        this.id = id;
+        this.fechaTransaccion = fechaTransaccion;
+        this.tipoTransaccion = tipoTransaccion;
+        this.monto = monto;
+        this.cuentaOrigen = cuentaOrigen;
+        this.cuentaDestino = cuentaDestino;
+    }
+
 
     private String generarID() {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("ddMMyyHHmmss");
@@ -52,11 +64,10 @@ public class Transaccion {
     @Override
     public String toString() {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        return String.format("[%s] %s - %s - S/ %.2f",getId(), getFechaTransaccion(), getTipoTransaccion(), getMonto());
+        return String.format("[%s] %s - %s - S/ %.2f", getId(), getFechaTransaccion(), getTipoTransaccion(), getMonto());
     }
 
     public String generarVoucher() {
-
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         StringBuilder voucher = new StringBuilder();
 
@@ -82,4 +93,12 @@ public class Transaccion {
         return voucher.toString();
     }
 
+    public Document toDocument() {
+        return new Document("_id", this.id)
+                .append("tipoTransaccion", this.tipoTransaccion.toString())
+                .append("fechaTransaccion", Date.from(this.fechaTransaccion.atZone(ZoneId.systemDefault()).toInstant()))
+                .append("monto", this.monto)
+                .append("cuentaOrigen", this.cuentaOrigen)
+                .append("cuentaDestino", this.cuentaDestino != null ? this.cuentaDestino : "CAJERO");
+    }
 }

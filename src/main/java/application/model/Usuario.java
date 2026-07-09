@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
-    private String nombre;
+    private final String nombre;
     private String pin;
-    private String dni;
-    private List<Cuenta> cuentas;
+    private final String dni;
+    private final List<Cuenta> cuentas;
     private Cuenta cuentaSeleccionada;
 
     public Usuario(String nombre, String pin, String dni) {
@@ -24,7 +24,6 @@ public class Usuario {
         this.cuentas = new ArrayList<>();
     }
 
-
     public String getDni() {
         return dni;
     }
@@ -39,7 +38,7 @@ public class Usuario {
 
     public Cuenta getCuentaSeleccionada() {
         if (cuentaSeleccionada == null && !cuentas.isEmpty()) {
-            cuentaSeleccionada = cuentas.get(0);
+            cuentaSeleccionada = cuentas.getFirst();
         }
         return cuentaSeleccionada;
     }
@@ -77,12 +76,18 @@ public class Usuario {
         }
     }
 
-    public List<Transaccion> getHistorialReciente(int dias) {
-        List<Transaccion> historial = new ArrayList<>();
-        for (Cuenta cuenta : cuentas) {
-            historial.addAll(cuenta.getTransaccionesRecientes(dias));
+    public List<Transaccion> getHistorialReciente(Auditoria auditoria, int dias) {
+        List<String> numerosCuentas = new ArrayList<>();
+
+        for (Cuenta cuenta : this.cuentas) {
+            numerosCuentas.add(cuenta.getNumeroCuenta());
         }
-        return historial;
+
+        if (numerosCuentas.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return auditoria.obtenerHistorialPorCuentas(numerosCuentas, dias);
     }
 
     @Override

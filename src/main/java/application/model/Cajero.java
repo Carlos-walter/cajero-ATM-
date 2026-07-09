@@ -9,7 +9,7 @@ public class Cajero {
     private final List<Cuenta> cuentas;
     private final Map<Billetes, Integer> billetes;
     private final List<Usuario> usuarios;
-    private Auditoria auditoria;
+    private final Auditoria auditoria;
 
     private Cajero(List<Usuario> usuarios) {
         auditoria = new Auditoria();
@@ -44,15 +44,15 @@ public class Cajero {
 
     public boolean autenticarUsuario(String dni, String pin) {
         if (intentos >= 3) {
-            auditoria.registrarEvento(usuarioActual.getNombre() + " intento fallido de autentificacion");
+            String nombreUser = (usuarioActual != null) ? usuarioActual.getNombre() : "DNI: " + dni;
+            auditoria.registrarEvento(nombreUser + " intento fallido de autentificacion");
             return false;
         }
         for (Usuario usuario : usuarios) {
             if (usuario.getDni().equals(dni) && usuario.validarPin(pin)) {
                 this.usuarioActual = usuario;
                 this.intentos = 0;
-                auditoria.registrarEvento(usuarioActual.getNombre() + " autenticado correctamente"
-                );
+                auditoria.registrarEvento(usuarioActual.getNombre() + " autenticado correctamente");
                 return true;
             }
         }
@@ -67,11 +67,10 @@ public class Cajero {
 
         for (Cuenta cuenta : usuarioActual.getCuentas()) {
             if (cuenta.getNumeroCuenta().equals(numeroCuenta)) {
+                auditoria.registrarEvento(usuarioActual.getNombre() + " consulto su saldo");
                 return cuenta.getSaldo();
             }
         }
-
-        auditoria.registrarEvento(usuarioActual.getNombre() + " consulto su saldo");
         return -1;
     }
 
@@ -130,6 +129,8 @@ public class Cajero {
     }
 
     public Transaccion retirar(double monto) {
+        if (usuarioActual == null) return null;
+
         if (!hayBilletesSuficientes((int) monto)) {
             System.out.println("El cajero no dispone de billetes suficientes");
             return null;
@@ -147,6 +148,7 @@ public class Cajero {
     }
 
     public Transaccion depositar(Map<Billetes, Integer> billetesDepositados) {
+        if (usuarioActual == null) return null;
         double monto = calcularMonto(billetesDepositados);
 
         Cuenta cuenta = usuarioActual.getCuentaSeleccionada();
@@ -161,15 +163,19 @@ public class Cajero {
 
     public List<Transaccion> verHistorial(int dias) {
         if (usuarioActual == null) return new ArrayList<>();
-        return usuarioActual.getHistorialReciente(dias);
+        return usuarioActual.getHistorialReciente(this.auditoria, dias);
     }
 
     public Transaccion transferir(String numOrigen, String numDestino, double monto) {
+        String nombreUser = (usuarioActual != null) ? usuarioActual.getNombre() : "Usuario Anónimo";
+
         Cuenta cuentaOrigen = null;
-        for (Cuenta c : usuarioActual.getCuentas()) {
-            if (c.getNumeroCuenta().equals(numOrigen)) {
-                cuentaOrigen = c;
-                break;
+        if (usuarioActual != null) {
+            for (Cuenta c : usuarioActual.getCuentas()) {
+                if (c.getNumeroCuenta().equals(numOrigen)) {
+                    cuentaOrigen = c;
+                    break;
+                }
             }
         }
 
@@ -185,18 +191,19 @@ public class Cajero {
 
         if (cuentaOrigen == null || cuentaDestino == null) {
             System.out.println("Cuenta origen o destino no encontrada");
+            auditoria.registrarEvento(nombreUser + " fallo al transferir (Cuenta no encontrada)");
             return null;
         }
 
         if (monto <= 0) {
             System.out.println("Monto inválido");
-            auditoria.registrarEvento(usuarioActual +" fallo al transferir");
+            auditoria.registrarEvento(nombreUser + " fallo al transferir (Monto inválido: $" + monto + ")");
             return null;
         }
 
         if (cuentaOrigen.getSaldo() < monto) {
             System.out.println("Fondos insuficientes");
-            auditoria.registrarEvento(usuarioActual +" fallo al transferir");
+            auditoria.registrarEvento(nombreUser + " fallo al transferir (Fondos insuficientes para transferir $" + monto + ")");
             return null;
         }
 
@@ -214,13 +221,14 @@ public class Cajero {
 
     public Usuario buscarUsuarioPorDNI(String dni) {
         String dniNormalizado = dni.trim();
+        String nombreUser = (usuarioActual != null) ? usuarioActual.getNombre() : "Usuario Anónimo";
         for (Usuario usuario : this.usuarios) {
             if (usuario.getDni().equalsIgnoreCase(dniNormalizado)) {
                 auditoria.registrarEvento(usuarioActual.getNombre() + " busco al usuario: " + usuario);
                 return usuario;
             }
         }
-        auditoria.registrarEvento(usuarioActual.getNombre() + "fallo al buscar a un usuario");
+        auditoria.registrarEvento(nombreUser + " fallo al buscar a un usuario");
 
         return null;
     }
