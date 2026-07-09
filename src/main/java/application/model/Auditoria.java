@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+// POO hola profe
+
 public class Auditoria {
     private final List<Transaccion> transacciones;
     private List<String> eventos;
