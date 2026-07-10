@@ -1,5 +1,6 @@
 package controllers;
 
+import application.model.Cajero;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import utils.Sesion;
 
 public class CambiarPinController implements TecladoListener {
 
@@ -170,52 +172,77 @@ public class CambiarPinController implements TecladoListener {
         }
 
         if (!esPinValido(pinIngresado)) {
-            lblMensaje.setText("El PIN debe tener 4 dígitos numéricos.");
+            lblMensaje.setText("El PIN debe tener 4 dígitos.");
             return;
         }
 
         switch (estado) {
 
             case VALIDAR_PIN_ACTUAL:
-                if (!pinIngresado.equals(pinActualSistema)) {
+
+                if (!Sesion.getUsuarioActual().validarPin(pinIngresado)) {
+
                     lblMensaje.setText("PIN incorrecto.");
                     txtPin.clear();
                     return;
                 }
 
-                lblMensaje.setText("PIN correcto. Ingrese su nueva clave.");
                 txtPin.clear();
+                lblMensaje.setText("Ingrese el nuevo PIN.");
+
                 estado = EstadoCambioPin.INGRESAR_NUEVO_PIN;
                 actualizarInstruccion();
+
                 break;
 
             case INGRESAR_NUEVO_PIN:
+
                 pinNuevoTemporal = pinIngresado;
+
                 txtPin.clear();
+
                 estado = EstadoCambioPin.CONFIRMAR_NUEVO_PIN;
-                lblMensaje.setText("Repita la nueva clave.");
+
+                lblMensaje.setText("Repita el nuevo PIN.");
+
                 actualizarInstruccion();
+
                 break;
 
             case CONFIRMAR_NUEVO_PIN:
+
                 if (!pinIngresado.equals(pinNuevoTemporal)) {
-                    lblMensaje.setText("Las claves no coinciden. Ingrese la nueva clave otra vez.");
+
+                    lblMensaje.setText("Los PIN no coinciden.");
+
                     txtPin.clear();
+
                     estado = EstadoCambioPin.INGRESAR_NUEVO_PIN;
+
                     actualizarInstruccion();
+
                     return;
                 }
 
-                // Cambio confirmado
-                pinActualSistema = pinNuevoTemporal;
-                pinNuevoTemporal = "";
-                txtPin.clear();
-                estado = EstadoCambioPin.FINALIZADO;
-                lblMensaje.setText("PIN cambiado correctamente.");
-                actualizarInstruccion();
-                break;
+                boolean cambio =
+                        Cajero.getInstancia()
+                                .cambiarPin(pinNuevoTemporal);
 
-            default:
+                if (cambio) {
+
+                    lblMensaje.setText("PIN cambiado correctamente.");
+
+                    estado = EstadoCambioPin.FINALIZADO;
+
+                } else {
+
+                    lblMensaje.setText("No fue posible cambiar el PIN.");
+                }
+
+                txtPin.clear();
+
+                actualizarInstruccion();
+
                 break;
         }
     }

@@ -1,11 +1,13 @@
 package controllers;
 
+import application.model.Cajero;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import utils.Sesion;
 
 import java.io.IOException;
 import java.net.URL;
@@ -134,6 +136,10 @@ public class MenuController {
      * Limpiar la sesión del usuario.
      */
     private void cerrarSesion() {
+
+        Cajero.getInstancia().cerrarSesion();
+
+        Sesion.cerrarSesion();
 
         cambiarPantalla("/Login.fxml");
     }

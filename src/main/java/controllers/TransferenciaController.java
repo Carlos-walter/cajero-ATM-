@@ -8,6 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import application.model.Cajero;
+import application.model.Cuenta;
+import application.model.Usuario;
 
 public class TransferenciaController implements TecladoListener {
 
@@ -146,45 +149,38 @@ public class TransferenciaController implements TecladoListener {
     @Override
     public void onEntrar() {
 
-        String cuenta = txtCuentaDestino.getText();
+        String cuentaDestino = txtCuentaDestino.getText().trim();
 
-        if (cuenta.isBlank()) {
-
-            lblMensaje.setText("Ingrese una cuenta destino.");
-
+        if (cuentaDestino.isEmpty()) {
+            lblMensaje.setText("Ingrese una cuenta.");
             return;
         }
 
-        if (cuenta.length() != 22) {
-
-            lblMensaje.setText(
-                    "La cuenta debe tener 22 dígitos."
-            );
-
+        if (cuentaDestino.length() != 22) {
+            lblMensaje.setText("La cuenta debe tener 22 dígitos.");
             return;
         }
 
+        Cuenta cuentaEncontrada = null;
 
-        // TODO:
-        // SELECT * FROM cuentas WHERE numero_cuenta = ?
+        for (Cuenta cuenta : Cajero.getInstancia().getCuentas()) {
 
-        System.out.println(
-                "Cuenta ingresada: " + cuenta
-        );
+            if (cuenta.getNumeroCuenta().equals(cuentaDestino)) {
 
-        // TODO:
-// SELECT * FROM cuentas WHERE numero_cuenta = ?
+                cuentaEncontrada = cuenta;
+                break;
+            }
+        }
 
-        System.out.println(
-                "Cuenta ingresada: " + cuenta
-        );
+        if (cuentaEncontrada == null) {
 
-// FUTURO:
-// Guardar el número de cuenta para que el Paso 2
-// pueda consultar la base de datos.
+            lblMensaje.setText("La cuenta no existe.");
+            return;
+        }
 
         cambiarPantalla("/TransferenciaPaso2.fxml");
     }
+
     /**
      * Cambia entre pantallas.
      *
@@ -195,7 +191,6 @@ public class TransferenciaController implements TecladoListener {
 
 
     private void cambiarPantalla(String rutaFxml) {
-
         try {
 
             Parent root = FXMLLoader.load(

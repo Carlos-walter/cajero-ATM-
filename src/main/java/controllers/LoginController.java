@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
+import application.model.Cajero;
+import utils.Sesion;
 
 /**
  * Controlador principal para la pantalla de Login.
@@ -79,43 +81,36 @@ public class LoginController implements TecladoListener {
     @Override
     public void onEntrar() {
 
-        String pinIngresado = PasswordField.getText();
+        String dni = "12345678";
+        String pin = PasswordField.getText();
 
-        if (pinIngresado.equals(PIN_CORRECTO)) {
+        boolean acceso = Cajero.getInstancia().autenticarUsuario(dni, pin);
 
-            intentosFallidos = 0;
+        if (acceso) {
+
+            Sesion.setUsuarioActual(
+                    Cajero.getInstancia().getUsuarioActual()
+            );
 
             cambiarEscena("Menu.fxml");
 
-            return;
-        }
+        } else {
 
-        intentosFallidos++;
+            intentosFallidos++;
 
-        vibrarInterfaz();
+            PasswordField.clear();
 
-        PasswordField.clear();
-
-        if (intentosFallidos >= 3) {
+            vibrarInterfaz();
 
             lblBienvenidaPIN.setText(
-                    "CUENTA BLOQUEADA"
+                    "PIN incorrecto."
             );
 
-            lblBienvenidaPIN.setStyle(
-                    "-fx-text-fill:red; -fx-font-weight:bold;"
-            );
+            if (intentosFallidos >= 3) {
 
-            cambiarEscena("CuentaBloqueada.fxml");
-
-            return;
+                cambiarEscena("CuentaBloqueada.fxml");
+            }
         }
-
-        lblBienvenidaPIN.setText(
-                "PIN incorrecto. Intento "
-                        + intentosFallidos
-                        + " de 3."
-        );
     }
 
     /**

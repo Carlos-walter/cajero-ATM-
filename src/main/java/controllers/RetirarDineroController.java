@@ -1,10 +1,14 @@
 package controllers;
 
+import application.model.Cajero;
+import application.model.Cuenta;
+import application.model.Transaccion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import utils.Sesion;
 
 public class RetirarDineroController implements TecladoListener {
 
@@ -23,7 +27,7 @@ public class RetirarDineroController implements TecladoListener {
      * En una aplicación real este valor
      * vendría desde la base de datos.
      */
-    private int saldoDisponible = 500;
+    private Cuenta cuenta;
 
     /**
      * Texto mostrado cuando aún no se ha ingresado un monto.
@@ -33,18 +37,13 @@ public class RetirarDineroController implements TecladoListener {
     @FXML
     public void initialize() {
 
-        if (tecladoController != null) {
+        tecladoController.setListener(this);
 
-            tecladoController.setListener(this);
-
-            System.out.println("Teclado conectado");
-        }
-
-        // Mostrar monto inicial en pantalla.
-        txtMonto.setText(MONTO_INICIAL);
+        cuenta = Sesion.getUsuarioActual().getCuentaSeleccionada();
 
         txtMesajefinal.setText(
-                "Saldo Disponible: S/ " + saldoDisponible
+                "Saldo Disponible: S/ "
+                        + cuenta.getSaldo()
         );
     }
 
@@ -174,7 +173,7 @@ public class RetirarDineroController implements TecladoListener {
                 return;
             }
 
-            if (monto > saldoDisponible) {
+            if (monto > cuenta.getSaldo()) {
 
                 txtMesajefinal.setText(
                         "Saldo insuficiente."
@@ -184,12 +183,23 @@ public class RetirarDineroController implements TecladoListener {
             }
 
             // Descontar dinero del saldo.
-            saldoDisponible -= monto;
+            Transaccion t = Cajero.getInstancia().retirar(monto);
 
-            txtMesajefinal.setText(
-                    "Retiro exitoso. Saldo restante: S/ "
-                            + saldoDisponible
-            );
+            if(t != null){
+
+                txtMesajefinal.setText(
+                        "Retiro exitoso.\nSaldo: "
+                                + cuenta.getSaldo()
+                );
+
+            }else{
+
+                txtMesajefinal.setText(
+                        "No fue posible retirar."
+                );
+
+            }
+
 
             // Volver al valor inicial.
             txtMonto.setText(MONTO_INICIAL);
