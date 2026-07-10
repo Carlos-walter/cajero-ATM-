@@ -31,7 +31,6 @@ public class Transaccion {
         this.cuentaDestino = cuentaDestino;
     }
 
-
     private String generarID() {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("ddMMyyHHmmss");
         return LocalDateTime.now().format(formato);
@@ -63,26 +62,22 @@ public class Transaccion {
 
     @Override
     public String toString() {
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        return String.format("[%s] %s - %s - S/ %.2f", getId(), getFechaTransaccion(), getTipoTransaccion(), getMonto());
+        return String.format("[%s] %s - %s - S/ %.2f", getId(), getFechaTransaccion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), getTipoTransaccion(), getMonto());
     }
 
     public String generarVoucher() {
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         StringBuilder voucher = new StringBuilder();
-
         voucher.append("-----------------------------------\n")
                 .append("      COMPROBANTE DE OPERACIÓN\n")
                 .append("----------------------------------\n")
                 .append("ID: ").append(getId()).append("\n")
                 .append("TIPO: ").append(getTipoTransaccion()).append("\n")
                 .append("FECHA: ")
-                .append(getFechaTransaccion()).append("\n")
+                .append(getFechaTransaccion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))).append("\n")
                 .append("MONTO: S/ ")
                 .append(String.format("%.2f", getMonto())).append("\n")
                 .append("CUENTA ORIGEN: ")
                 .append(getCuentaOrigen()).append("\n");
-
         if (cuentaDestino != null && !cuentaDestino.equals("CAJERO")) {
             voucher.append("CUENTA DESTINO: ").append(getCuentaDestino())
                     .append("\n");

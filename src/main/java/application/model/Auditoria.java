@@ -15,18 +15,46 @@ import java.util.List;
 public class Auditoria {
     private final List<Transaccion> transacciones;
     private final List<String> eventos;
-    private final MongoCollection<Document> coleccionTransacciones = MongoManager.getInstancia().getColeccion("transacciones");
-    private final MongoCollection<Document> coleccionEventos = MongoManager.getInstancia().getColeccion("eventos_auditoria");
+    private final MongoCollection<Document> coleccionTransacciones;
+    private final MongoCollection<Document> coleccionEventos;
 
     public Auditoria() {
         transacciones = new ArrayList<>();
         eventos = new ArrayList<>();
+        this.coleccionTransacciones = MongoManager.getInstancia().getColeccion("transacciones");
+        this.coleccionEventos = MongoManager.getInstancia().getColeccion("eventos_auditoria");
+    }
+
+    private Transaccion documentToTransaccion(Document doc) {
+        String id = doc.getString("_id");
+        double monto = doc.getDouble("monto");
+        String origen = doc.getString("cuentaOrigen");
+        String destino = doc.getString("cuentaDestino");
+        TipoTransaccion tipo = TipoTransaccion.valueOf(doc.getString("tipoTransaccion"));
+
+        Date dateMongo = doc.getDate("fechaTransaccion");
+
+        LocalDateTime fechaTransaccion = LocalDateTime.ofInstant(dateMongo.toInstant(), ZoneId.systemDefault());
+
+        return new Transaccion(id, tipo, fechaTransaccion, monto, origen, destino);
+    }
+
+    private Date toDate(LocalDate fecha) {
+        return Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    private Date toDate(LocalDateTime fechaHora) {
+        return Date.from(fechaHora.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public void registrar(Transaccion transaccion) {
         if (transaccion != null) {
             transacciones.add(transaccion);
-            coleccionTransacciones.insertOne(transaccion.toDocument());
+            try {
+                coleccionTransacciones.insertOne(transaccion.toDocument());
+            } catch (Exception e) {
+                System.err.println("No se pudo respaldar la transacción en Mongo DB, detalle del error: " + e.getMessage());
+            }
         }
     }
 
@@ -35,11 +63,14 @@ public class Auditoria {
         String fechaStr = LocalDateTime.now().format(formato);
         String registro = String.format("[%s] %s", fechaStr, evento);
         eventos.add(registro);
-
-        Document documentoEvento = new Document("fecha", new Date())
-                .append("descripcion", evento)
-                .append("registroFormateado", registro);
-        coleccionEventos.insertOne(documentoEvento);
+        try {
+            Document documentoEvento = new Document("fecha", toDate(LocalDateTime.now()))
+                    .append("descripcion", evento)
+                    .append("registroFormateado", registro);
+            coleccionEventos.insertOne(documentoEvento);
+        } catch (Exception e) {
+            System.err.println("Hubo un error al guardar el evento en la nube " + e.getMessage());
+        }
     }
 
     public String generarReporteDiario() {
@@ -62,28 +93,18 @@ public class Auditoria {
     public List<Transaccion> filtrarPorFecha(LocalDate fecha) {
         List<Transaccion> resultado = new ArrayList<>();
 
-        LocalDateTime inicioDia = fecha.atStartOfDay();
-        LocalDateTime finDia = fecha.atTime(LocalTime.MAX);
+        Date dateInicio = toDate(fecha);
+        Date dateFin = toDate(fecha.atTime(LocalTime.MAX));
 
-        Date dateInicio = Date.from(inicioDia.atZone(ZoneId.systemDefault()).toInstant());
-        Date dateFin = Date.from(finDia.atZone(ZoneId.systemDefault()).toInstant());
-
-        for (Document doc : coleccionTransacciones.find(Filters.and(
-                Filters.gte("fechaTransaccion", dateInicio),
-                Filters.lte("fechaTransaccion", dateFin)
-        ))) {
-
-            String id = doc.getString("_id");
-            double monto = doc.getDouble("monto");
-            String cuentaOrigen = doc.getString("cuentaOrigen");
-            String cuentaDestino = doc.getString("cuentaDestino");
-            TipoTransaccion tipo = TipoTransaccion.valueOf(doc.getString("tipoTransaccion"));
-
-            Date dateMongo = doc.getDate("fechaTransaccion");
-            LocalDateTime fechaTransaccion = LocalDateTime.ofInstant(dateMongo.toInstant(), ZoneId.systemDefault());
-
-            Transaccion t = new Transaccion(id, tipo, fechaTransaccion, monto, cuentaOrigen, cuentaDestino);
-            resultado.add(t);
+        try {
+            for (Document doc : coleccionTransacciones.find(Filters.and(
+                    Filters.gte("fechaTransaccion", dateInicio),
+                    Filters.lte("fechaTransaccion", dateFin)
+            ))) {
+                resultado.add(documentToTransaccion(doc));
+            }
+        } catch (Exception e) {
+            System.err.println("Hubo un error al filtrar " + e.getMessage());
         }
 
         return resultado;
@@ -92,30 +113,24 @@ public class Auditoria {
     public List<Transaccion> obtenerHistorialPorCuentas(List<String> numerosCuentas, int dias) {
         List<Transaccion> historial = new ArrayList<>();
 
-        LocalDateTime fechaLimite = LocalDateTime.now().minusDays(dias);
-        Date dateLimiteBson = Date.from(fechaLimite.atZone(ZoneId.systemDefault()).toInstant());
+        Date dateLimiteBson = toDate(LocalDate.now().minusDays(dias));
 
-        Bson filtroCuentas = Filters.or(
-                Filters.in("cuentaOrigen", numerosCuentas),
-                Filters.in("cuentaDestino", numerosCuentas));
-        Bson filtroFecha = Filters.gte("fechaTransaccion", dateLimiteBson);
-        Bson filtroFinal = Filters.and(filtroCuentas, filtroFecha);
+        try {
+            Bson filtroCuentas = Filters.or(
+                    Filters.in("cuentaOrigen", numerosCuentas),
+                    Filters.in("cuentaDestino", numerosCuentas));
+            Bson filtroFecha = Filters.gte("fechaTransaccion", dateLimiteBson);
+            Bson filtroFinal = Filters.and(filtroCuentas, filtroFecha);
 
-        for (Document doc : coleccionTransacciones.find(filtroFinal)) {
-            String id = doc.getString("_id");
-            double monto = doc.getDouble("monto");
-            String origen = doc.getString("cuentaOrigen");
-            String destino = doc.getString("cuentaDestino");
-            TipoTransaccion tipo = TipoTransaccion.valueOf(doc.getString("tipoTransaccion"));
-
-            Date dateMongo = doc.getDate("fechaTransaccion");
-            LocalDateTime fechaTransaccion = LocalDateTime.ofInstant(dateMongo.toInstant(), ZoneId.systemDefault());
-
-            Transaccion t = new Transaccion(id, tipo, fechaTransaccion, monto, origen, destino);
-            historial.add(t);
+            for (Document doc : coleccionTransacciones.find(filtroFinal)) {
+                historial.add(documentToTransaccion(doc));
+            }
+        } catch (Exception e) {
+            System.err.println("Hubo un error al obtener el historial " + e.getMessage());
         }
         return historial;
     }
+
     public int totalOperaciones() {
         return transacciones.size();
     }

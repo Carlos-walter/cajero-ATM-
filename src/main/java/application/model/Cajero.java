@@ -168,7 +168,6 @@ public class Cajero {
 
     public Transaccion transferir(String numOrigen, String numDestino, double monto) {
         String nombreUser = (usuarioActual != null) ? usuarioActual.getNombre() : "Usuario Anónimo";
-
         Cuenta cuentaOrigen = null;
         if (usuarioActual != null) {
             for (Cuenta c : usuarioActual.getCuentas()) {

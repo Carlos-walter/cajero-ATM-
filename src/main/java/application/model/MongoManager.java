@@ -1,7 +1,6 @@
 package application.model;
 
 import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -17,14 +16,9 @@ public class MongoManager {
         try {
             String uriAtlas = "mongodb+srv://admin:expoPOO2026@clusterpoo.3z7bvfj.mongodb.net/?appName=ClusterPOO";
             ConnectionString connectionString = new ConnectionString(uriAtlas);
-
-            MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connectionString).build();
-
-            this.mongoClient = MongoClients.create(settings);
-
+            this.mongoClient = MongoClients.create(connectionString);
             this.database = mongoClient.getDatabase("atm_db");
-
-            System.out.println("¡MongoManager inicializado con éxito apuntando a MongoDB Atlas!");
+            System.out.println("MongoManager inicializado con éxito apuntando a MongoDB Atlas...");
         } catch (Exception e) {
             System.err.println("Error crítico al inicializar la conexión con Atlas: " + e.getMessage());
         }
@@ -38,5 +32,11 @@ public class MongoManager {
 
     public MongoCollection<Document> getColeccion(String nombre) {
         return database.getCollection(nombre);
+    }
+
+    public void cerrarConexion() {
+        if (mongoClient != null) {
+            this.mongoClient.close();
+        }
     }
 }
