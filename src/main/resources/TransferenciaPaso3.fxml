@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.TransferenciaPaso3Controller">
+   <children>
+      <Label fx:id="lblPaso1" layoutX="167.0" layoutY="52.0" prefHeight="48.0" prefWidth="172.0" text="Paso 1  &gt;">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblPaso2" layoutX="359.0" layoutY="52.0" prefHeight="48.0" prefWidth="172.0" text="Paso 2  &gt;">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblPaso3" layoutX="551.0" layoutY="52.0" prefHeight="48.0" prefWidth="172.0" text="Paso 3  &gt;" textFill="#001e40">
+         <font>
+            <Font name="System Bold" size="35.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblTerminado" layoutX="735.0" layoutY="52.0" prefHeight="51.0" prefWidth="235.0" text="Terminado  &gt;">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbPaso3Monto" layoutX="708.0" layoutY="110.0" prefHeight="57.0" prefWidth="554.0" text="Paso 3: Monto a Transferir">
+         <font>
+            <Font name="System Bold" size="40.0" />
+         </font>
+      </Label>
+      <Label layoutX="708.0" layoutY="167.0" text="FONDOS EN CUENTA ORIGEN: S/ ">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtMonto" alignment="TOP_CENTER" editable="false" layoutX="581.0" layoutY="221.0" prefHeight="82.0" prefWidth="829.0" text="S/ 0.00">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </TextField>
+      <HBox fx:id="contTeclado" layoutX="581.0" layoutY="313.0" prefHeight="627.0" prefWidth="829.0">
+         <children>
+            <fx:include fx:id="teclado" source="Teclado.fxml" />
+         </children>
+      </HBox>
+      <Button fx:id="btnRegresar" layoutX="581.0" layoutY="964.0" mnemonicParsing="false" onAction="#volverPaso2" prefHeight="89.0" prefWidth="829.0" text="REGRESAR">
+         <font>
+            <Font name="System Bold" size="35.0" />
+         </font>
+      </Button>
+      <ImageView fx:id="imgRetun" fitHeight="89.0" fitWidth="109.0" layoutX="779.0" layoutY="964.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/return.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

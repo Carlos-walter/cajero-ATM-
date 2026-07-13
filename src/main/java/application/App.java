@@ -17,9 +17,6 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        // ==========================
-        // CREAR USUARIOS DE PRUEBA
-        // ==========================
 
         Usuario u1 = new Usuario(
                 "Ivan",

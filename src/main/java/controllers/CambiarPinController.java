@@ -109,9 +109,7 @@ public class CambiarPinController implements TecladoListener {
         return pin != null && pin.matches("\\d{4}");
     }
 
-    // ==========================
-    // TECLADO NUMÉRICO
-    // ==========================
+
 
     /**
      * Agrega un dígito al PIN.
