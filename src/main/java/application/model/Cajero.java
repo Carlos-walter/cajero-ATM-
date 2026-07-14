@@ -29,6 +29,12 @@ public class Cajero {
 
     public static void inicializar(List<Usuario> usuarios) {
         if (instancia == null) {
+            try {
+                System.out.println("Iniciando servicios con MongoGb...");
+                MongoManager.getInstancia();
+            } catch (Exception e) {
+                System.err.println("Ocurrio un fallo inesperado al conectar con MongoDB: " + e.getMessage());
+            }
             instancia = new Cajero(usuarios);
         }
     }
@@ -241,6 +247,7 @@ public class Cajero {
     }
 
     public void cerrarSesion() {
+        auditoria.registrarEvento(usuarioActual.getNombre() + " ha cerrado sesión");
         this.usuarioActual = null;
         this.intentos = 0;
     }

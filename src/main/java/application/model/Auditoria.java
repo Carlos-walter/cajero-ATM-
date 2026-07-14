@@ -1,8 +1,10 @@
 package application.model;
+
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -112,19 +114,19 @@ public class Auditoria {
 
     public List<Transaccion> obtenerHistorialPorCuentas(List<String> numerosCuentas, int dias) {
         List<Transaccion> historial = new ArrayList<>();
-
-        Date dateLimiteBson = toDate(LocalDate.now().minusDays(dias));
+        Date dateBson = toDate(LocalDate.now().minusDays(dias));
 
         try {
             Bson filtroCuentas = Filters.or(
                     Filters.in("cuentaOrigen", numerosCuentas),
                     Filters.in("cuentaDestino", numerosCuentas));
-            Bson filtroFecha = Filters.gte("fechaTransaccion", dateLimiteBson);
+            Bson filtroFecha = Filters.gte("fechaTransaccion", dateBson);
             Bson filtroFinal = Filters.and(filtroCuentas, filtroFecha);
 
             for (Document doc : coleccionTransacciones.find(filtroFinal)) {
                 historial.add(documentToTransaccion(doc));
             }
+
         } catch (Exception e) {
             System.err.println("Hubo un error al obtener el historial " + e.getMessage());
         }

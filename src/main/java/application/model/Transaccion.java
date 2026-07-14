@@ -1,5 +1,7 @@
 package application.model;
+
 import org.bson.Document;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -89,11 +91,14 @@ public class Transaccion {
     }
 
     public Document toDocument() {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss a");
+        String fechaPeru = this.fechaTransaccion.format(formato);
         return new Document("_id", this.id)
                 .append("tipoTransaccion", this.tipoTransaccion.toString())
                 .append("fechaTransaccion", Date.from(this.fechaTransaccion.atZone(ZoneId.systemDefault()).toInstant()))
                 .append("monto", this.monto)
                 .append("cuentaOrigen", this.cuentaOrigen)
-                .append("cuentaDestino", this.cuentaDestino != null ? this.cuentaDestino : "CAJERO");
+                .append("cuentaDestino", this.cuentaDestino != null ? this.cuentaDestino : "CAJERO")
+                .append("registro formateado", fechaPeru);
     }
 }

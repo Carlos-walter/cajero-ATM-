@@ -6,6 +6,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class MongoManager {
     private static MongoManager instancia;
@@ -14,7 +15,9 @@ public class MongoManager {
 
     private MongoManager() {
         try {
-            String uriAtlas = "mongodb+srv://admin:expoPOO2026@clusterpoo.3z7bvfj.mongodb.net/?appName=ClusterPOO";
+            Dotenv dotenv;
+            dotenv = Dotenv.load();
+            String uriAtlas = dotenv.get("Mongo_URI");
             ConnectionString connectionString = new ConnectionString(uriAtlas);
             this.mongoClient = MongoClients.create(connectionString);
             this.database = mongoClient.getDatabase("atm_db");
@@ -23,8 +26,9 @@ public class MongoManager {
             System.err.println("Error crítico al inicializar la conexión con Atlas: " + e.getMessage());
         }
     }
+
     public static MongoManager getInstancia() {
-        if (instancia == null) {
+        if (instancia == null || instancia.mongoClient == null) {
             instancia = new MongoManager();
         }
         return instancia;
@@ -35,8 +39,15 @@ public class MongoManager {
     }
 
     public void cerrarConexion() {
-        if (mongoClient != null) {
-            this.mongoClient.close();
+        try {
+            if (mongoClient != null) {
+                this.mongoClient.close();
+                this.database = null;
+                this.mongoClient = null;
+                System.out.println("Se cerro la conexion con MongoDB");
+            }
+        } catch (Exception e) {
+            System.err.println("Error al cerrar la conexión: " + e.getMessage());
         }
     }
 }

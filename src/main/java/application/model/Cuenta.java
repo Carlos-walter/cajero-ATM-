@@ -39,12 +39,12 @@ public class Cuenta {
     public Transaccion depositar(double monto) {
         if (monto > 0) {
             saldo += monto;
-            Transaccion deposito = new Transaccion(TipoTransaccion.deposito, monto, "EXTERNO", numeroCuenta);
+            Transaccion deposito = new Transaccion(TipoTransaccion.deposito, monto, "CAJERO", numeroCuenta);
             transacciones.add(deposito);
             System.out.println("Depósito exitoso: $" + monto);
             return deposito;
         } else {
-            System.out.println("Monto insuficiente");
+            System.out.println("Monto invalido");
             return null;
         }
     }
@@ -52,7 +52,7 @@ public class Cuenta {
     public Transaccion retirar(double monto) {
         if (monto > 0 && saldo >= monto) {
             saldo -= monto;
-            Transaccion retiro = new Transaccion(TipoTransaccion.retiro, monto, numeroCuenta, "CAJERO");
+            Transaccion retiro = new Transaccion(TipoTransaccion.retiro, monto, numeroCuenta, "EXTERNO");
             transacciones.add(retiro);
             System.out.println("Retiro exitoso: $" + monto);
             return retiro;

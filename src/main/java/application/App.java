@@ -2,6 +2,7 @@ package application;
 
 import application.model.Cajero;
 import application.model.Cuenta;
+import application.model.MongoManager;
 import application.model.Usuario;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +17,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-
         Usuario u1 = new Usuario(
                 "Ivan",
                 "1234",
@@ -64,6 +63,16 @@ public class App extends Application {
         primaryStage.setTitle("Cajero Automático - Interfaz");
         primaryStage.setScene(new Scene(root, 450, 350));
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() {
+        try {
+            System.out.println("Apagando el sistema del cajero... Cerrando Base de datos");
+            MongoManager.getInstancia().cerrarConexion();
+        } catch (Exception e) {
+            System.err.println("Error al cerrar recursos: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
