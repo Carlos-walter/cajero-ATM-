@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.VoucherController">
+   <children>
+      <Label alignment="TOP_CENTER" layoutX="1.0" layoutY="32.0" prefHeight="65.0" prefWidth="1917.0" text="VAUCHER" textFill="#001e40">
+         <font>
+            <Font name="System Bold" size="50.0" />
+         </font>
+      </Label>
+      <Label layoutX="730.0" layoutY="104.0" text="BANCO CENTRAL DE RESERVA" textFill="#546279">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblFecha" layoutX="680.0" layoutY="178.0" text="Fecha:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Separator layoutX="627.0" layoutY="150.0" prefHeight="4.0" prefWidth="668.0" />
+      <Label fx:id="lblHora" layoutX="680.0" layoutY="240.0" text="Hora:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblATM" layoutX="680.0" layoutY="301.0" text="ATM:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Separator layoutX="626.0" layoutY="358.0" prefHeight="4.0" prefWidth="668.0" />
+      <Label fx:id="lblOperacion" layoutX="673.0" layoutY="386.0" text="Operación:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblCliente" layoutX="676.0" layoutY="444.0" text="Cliente:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblCuentaOrigen" layoutX="676.0" layoutY="509.0" text="Cuenta origen:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblCuentaDestino" layoutX="669.0" layoutY="577.0" text="Cuenta destino:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Separator layoutX="626.0" layoutY="647.0" prefHeight="4.0" prefWidth="668.0" />
+      <Label fx:id="lblMonto" layoutX="674.0" layoutY="674.0" text="Monto:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblComision" layoutX="669.0" layoutY="729.0" text="Comisión:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblSaldoDisponible" layoutX="673.0" layoutY="791.0" text="Saldo disponible:" textFill="#777b84">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnImprimir" layoutX="626.0" layoutY="891.0" mnemonicParsing="false" onAction="#imprimirVoucher" prefHeight="82.0" prefWidth="305.0" text="IMPRIMIR">
+         <font>
+            <Font name="System Bold" size="40.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnFinalizar" layoutX="1018.0" layoutY="891.0" mnemonicParsing="false" onAction="#irMenu" prefHeight="82.0" prefWidth="305.0" text="FINALIZAR">
+         <font>
+            <Font name="System Bold" size="40.0" />
+         </font>
+      </Button>
+      <Label fx:id="lblFechaLlenar" layoutX="1009.0" layoutY="178.0" prefHeight="48.0" prefWidth="305.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblHoraLlenar" layoutX="1009.0" layoutY="240.0" prefHeight="48.0" prefWidth="305.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblATMLlenar" layoutX="1009.0" layoutY="301.0" prefHeight="48.0" prefWidth="305.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblOperacionLlenar" layoutX="1009.0" layoutY="386.0" prefHeight="48.0" prefWidth="305.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblClienteLlenar" layoutX="1009.0" layoutY="450.0" prefHeight="48.0" prefWidth="305.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblCuentaOrigenLlenar" layoutX="929.0" layoutY="509.0" prefHeight="48.0" prefWidth="385.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblCuentaDestinoLlenar" layoutX="929.0" layoutY="577.0" prefHeight="48.0" prefWidth="385.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblMontoLlenar" layoutX="1009.0" layoutY="674.0" prefHeight="48.0" prefWidth="305.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblComisionLlenar" layoutX="1009.0" layoutY="729.0" prefHeight="48.0" prefWidth="305.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblSaldoDisponibleLlenar" layoutX="1009.0" layoutY="791.0" prefHeight="48.0" prefWidth="305.0">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

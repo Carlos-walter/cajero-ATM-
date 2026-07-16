@@ -204,7 +204,7 @@ public class TransferenciaPaso3Controller implements TecladoListener {
 
 
         cambiarPantalla(
-                "/VoucherTransferencia.fxml"
+                "/Voucher.fxml"
         );
 
 
