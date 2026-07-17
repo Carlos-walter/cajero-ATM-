@@ -112,12 +112,10 @@ public class MenuController {
         if (vboxHistorial != null) {
 
             vboxHistorial.setOnMouseClicked(
-                    event -> System.out.println(
-                            "Historial - Pendiente"
-                    )
+                    event -> abrirHistorial()
             );
-        }
 
+        }
         // ==========================
 // BLOQUEAR CUENTA
 // ==========================
@@ -158,6 +156,14 @@ public class MenuController {
     private void abrirTransferencia() {
 
         cambiarPantalla("/Transferencia.fxml");
+    }
+    /**
+     * Abre la pantalla del historial de movimientos.
+     */
+    private void abrirHistorial() {
+
+        cambiarPantalla("/Historial.fxml");
+
     }
     //  Abre la pantalla de BloquearCuenta
     private void abrirBloquearCuenta() {

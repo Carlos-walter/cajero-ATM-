@@ -1,0 +1,20 @@
+.table-view{
+    -fx-font-size:22px;
+}
+
+.table-view .column-header{
+    -fx-pref-height:60px;
+}
+
+.table-view .column-header .label{
+    -fx-font-size:24px;
+    -fx-font-weight:bold;
+}
+
+.table-row-cell{
+    -fx-cell-size:55px;
+}
+
+.table-cell{
+    -fx-font-size:22px;
+}
