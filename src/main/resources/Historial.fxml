@@ -7,18 +7,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.HistorialController">
    <children>
-      <AnchorPane fx:id="paneHistorial" layoutX="330.0" layoutY="14.0" prefHeight="1058.0" prefWidth="1477.0">
+      <AnchorPane fx:id="paneHistorial" layoutX="206.0" layoutY="20.0" prefHeight="1058.0" prefWidth="1477.0">
          <children>
             <Label fx:id="lblTitulo" alignment="TOP_CENTER" layoutY="63.0" prefHeight="72.0" prefWidth="1474.0" text="HISTORIAL DE MOVIMIENTOS">
                <font>
                   <Font name="System Bold" size="50.0" />
                </font>
             </Label>
-            <TableView fx:id="tblHistorial"  stylesheets="@tabla.css" layoutX="14.0"  layoutY="178.0" prefHeight="750.0" prefWidth="1450.0" AnchorPane.leftAnchor="14.0"
-                      >
+            <TableView fx:id="tblHistorial" layoutX="14.0" layoutY="178.0" prefHeight="750.0" prefWidth="1450.0" stylesheets="@tabla.css" AnchorPane.leftAnchor="14.0">
               <columns>
                 <TableColumn fx:id="colFecha" prefWidth="290.0" text="Fecha/Hora " />
                 <TableColumn fx:id="colOperacion" minWidth="0.0" prefWidth="290.0" text="Operación" />
