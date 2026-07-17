@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="248.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CuentaItemController">
+   <children>
+      <ImageView fx:id="ImageView" fitHeight="213.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/id-card.png" />
+         </image>
+      </ImageView>
+      <VBox layoutX="200.0" prefHeight="126.0" prefWidth="610.0">
+         <children>
+            <Label fx:id="lblTipoCuenta" prefHeight="25.0" prefWidth="602.0" text="Tipo Cuenta">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblNumeroCuenta" text="lNumero Cuenta">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblEstado" text="Estado">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox layoutX="200.0" layoutY="144.0" prefHeight="103.0" prefWidth="610.0">
+         <children>
+            <Label fx:id="lblSaldo" prefHeight="25.0" prefWidth="602.0" text="Saldo">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnSeleccionar" mnemonicParsing="false" prefHeight="62.0" prefWidth="665.0" text="Seleccionar">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

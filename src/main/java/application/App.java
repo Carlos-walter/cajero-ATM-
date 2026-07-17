@@ -18,9 +18,10 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        // =====================================================
         // DATOS TEMPORALES
         // Se eliminarán cuando se conecte SQL Server.
-
+        // =====================================================
 
         Usuario u1 = new Usuario(
                 "Ivan",
@@ -35,7 +36,25 @@ public class App extends Application {
                 u1
         );
 
+        Cuenta c2 = new Cuenta(
+                "2222222222222222222222",
+                "Corriente",
+                12000,
+                u1
+        );
+
+        Cuenta c3 = new Cuenta(
+                "3333333333333333333333",
+                "CTS",
+                3000,
+                u1
+        );
+
         u1.agregarCuenta(c1);
+        u1.agregarCuenta(c2);
+        u1.agregarCuenta(c3);
+
+        // =====================================================
 
         Usuario u2 = new Usuario(
                 "Carlos",
@@ -43,14 +62,24 @@ public class App extends Application {
                 "87654321"
         );
 
-        Cuenta c2 = new Cuenta(
-                "2222222222222222222222",
+        Cuenta c4 = new Cuenta(
+                "4444444444444444444444",
                 "Ahorros",
                 8000,
                 u2
         );
 
-        u2.agregarCuenta(c2);
+        Cuenta c5 = new Cuenta(
+                "5555555555555555555555",
+                "Corriente",
+                15000,
+                u2
+        );
+
+        u2.agregarCuenta(c4);
+        u2.agregarCuenta(c5);
+
+        // =====================================================
 
         List<Usuario> usuarios = new ArrayList<>();
 
@@ -58,13 +87,13 @@ public class App extends Application {
         usuarios.add(u2);
 
         /*
-        ===============================================
+        =====================================================
         FUTURO (SQL SERVER)
 
         List<Usuario> usuarios =
                 UsuarioDAO.obtenerUsuarios();
 
-        ===============================================
+        =====================================================
         */
 
         Cajero.inicializar(usuarios);
@@ -78,7 +107,7 @@ public class App extends Application {
         primaryStage.setScene(new Scene(root));
 
         primaryStage.setMaximized(true);
-//      primaryStage.setFullScreen(true); // si luego quieres pantalla completa
+        // primaryStage.setFullScreen(true);
 
         primaryStage.show();
     }
@@ -88,9 +117,7 @@ public class App extends Application {
 
         try {
 
-            System.out.println(
-                    "Apagando el sistema del cajero..."
-            );
+            System.out.println("Apagando el sistema del cajero...");
 
             MongoManager.getInstancia().cerrarConexion();
 
@@ -105,5 +132,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
 }

@@ -88,10 +88,9 @@ public class MenuController {
         if (vboxSaldo != null) {
 
             vboxSaldo.setOnMouseClicked(
-                    event -> System.out.println(
-                            "Saldo / Cuentas - Pendiente"
-                    )
+                    event -> abrirCuentaSaldo()
             );
+
         }
 
         if (vboxHistorial != null) {
@@ -141,6 +140,15 @@ public class MenuController {
     private void abrirTransferencia() {
 
         cambiarPantalla("/Transferencia.fxml");
+    }
+    /**
+     * Abre la pantalla para seleccionar
+     * la cuenta del usuario.
+     */
+    private void abrirCuentaSaldo() {
+
+        cambiarPantalla("/CuentaSaldo.fxml");
+
     }
     /**
      * Abre la pantalla del historial de movimientos.
