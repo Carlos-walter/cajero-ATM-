@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LoginDNIController">
+   <children>
+      <ImageView fx:id="imgLogo" fitHeight="284.0" fitWidth="296.0" layoutX="58.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/bank.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblBienvenida" layoutX="87.0" layoutY="355.0" text="Hola, ">
+         <font>
+            <Font name="System Bold" size="96.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblBienvenida2" layoutX="79.0" layoutY="492.0" text="bienvenido  a">
+         <font>
+            <Font name="System Bold" size="96.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblBienvenida3" layoutX="77.0" layoutY="635.0" text="Banco Central">
+         <font>
+            <Font name="System Bold" size="96.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblBienvenidaPIN" alignment="TOP_CENTER" layoutX="920.0" layoutY="112.0" prefHeight="85.0" prefWidth="901.0" text="Igrese tu número de DNI" textOverrun="CENTER_ELLIPSIS">
+         <font>
+            <Font size="60.0" />
+         </font>
+      </Label>
+      <HBox layoutX="917.0" layoutY="409.0" prefHeight="630.0" prefWidth="901.0">
+         <children>
+            <fx:include fx:id="teclado" source="Teclado.fxml" />
+         </children>
+      </HBox>
+      <Label fx:id="lblBienvenida31" layoutX="88.0" layoutY="839.0" text="La seguridad y transparencia de sus  ">
+         <font>
+            <Font size="37.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblBienvenida311" layoutX="421.0" layoutY="116.0" prefHeight="157.0" prefWidth="336.0" text="UTP">
+         <font>
+            <Font name="System Bold" size="120.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblBienvenida312" layoutX="91.0" layoutY="898.0" text="transacciones financieras es nuestra ">
+         <font>
+            <Font size="37.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblBienvenida3121" layoutX="87.0" layoutY="953.0" text=" prioridad institucional número uno.">
+         <font>
+            <Font size="37.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtDni" alignment="CENTER" layoutX="917.0" layoutY="225.0" prefHeight="151.0" prefWidth="901.0" promptText="8 Numeros">
+         <font>
+            <Font name="System Bold" size="50.0" />
+         </font>
+      </TextField>
+   </children>
+</AnchorPane>

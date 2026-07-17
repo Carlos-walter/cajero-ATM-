@@ -225,15 +225,24 @@ public class Cajero {
     }
 
     public Usuario buscarUsuarioPorDNI(String dni) {
+
         String dniNormalizado = dni.trim();
-        String nombreUser = (usuarioActual != null) ? usuarioActual.getNombre() : "Usuario Anónimo";
-        for (Usuario usuario : this.usuarios) {
+
+        for (Usuario usuario : usuarios) {
+
             if (usuario.getDni().equalsIgnoreCase(dniNormalizado)) {
-                auditoria.registrarEvento(usuarioActual.getNombre() + " busco al usuario: " + usuario);
+
+                auditoria.registrarEvento(
+                        "DNI encontrado: " + dniNormalizado
+                );
+
                 return usuario;
             }
         }
-        auditoria.registrarEvento(nombreUser + " fallo al buscar a un usuario");
+
+        auditoria.registrarEvento(
+                "DNI no registrado: " + dniNormalizado
+        );
 
         return null;
     }

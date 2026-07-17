@@ -17,6 +17,11 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        // DATOS TEMPORALES
+        // Se eliminarán cuando se conecte SQL Server.
+
+
         Usuario u1 = new Usuario(
                 "Ivan",
                 "1234",
@@ -52,30 +57,53 @@ public class App extends Application {
         usuarios.add(u1);
         usuarios.add(u2);
 
-        // Inicializar el cajero
+        /*
+        ===============================================
+        FUTURO (SQL SERVER)
+
+        List<Usuario> usuarios =
+                UsuarioDAO.obtenerUsuarios();
+
+        ===============================================
+        */
+
         Cajero.inicializar(usuarios);
 
-        // Cargar Login.fxml
         Parent root = FXMLLoader.load(
-                getClass().getResource("/Login.fxml")
+                getClass().getResource("/LoginDNI.fxml")
         );
 
-        primaryStage.setTitle("Cajero Automático - Interfaz");
-        primaryStage.setScene(new Scene(root, 450, 350));
+        primaryStage.setTitle("Cajero Automático");
+
+        primaryStage.setScene(new Scene(root));
+
+        primaryStage.setMaximized(true);
+//      primaryStage.setFullScreen(true); // si luego quieres pantalla completa
+
         primaryStage.show();
     }
 
     @Override
     public void stop() {
+
         try {
-            System.out.println("Apagando el sistema del cajero... Cerrando Base de datos");
+
+            System.out.println(
+                    "Apagando el sistema del cajero..."
+            );
+
             MongoManager.getInstancia().cerrarConexion();
+
         } catch (Exception e) {
-            System.err.println("Error al cerrar recursos: " + e.getMessage());
+
+            System.err.println(e.getMessage());
+
         }
+
     }
 
     public static void main(String[] args) {
         launch(args);
     }
+
 }
