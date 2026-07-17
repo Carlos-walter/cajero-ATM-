@@ -5,12 +5,18 @@ import application.model.Cuenta;
 import application.model.Transaccion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import utils.Sesion;
 
+
 public class RetirarDineroController implements TecladoListener {
+
 
     @FXML
     private TextField txtMonto;
@@ -21,194 +27,356 @@ public class RetirarDineroController implements TecladoListener {
     @FXML
     private TecladoController tecladoController;
 
-    /**
-     * Saldo disponible temporal.
-     *
-     * En una aplicación real este valor
-     * vendría desde la base de datos.
-     */
+
     private Cuenta cuenta;
 
-    /**
-     * Texto mostrado cuando aún no se ha ingresado un monto.
-     */
+
     private static final String MONTO_INICIAL = "S/ 0.00";
+
 
     @FXML
     public void initialize() {
 
-        tecladoController.setListener(this);
 
-        cuenta = Sesion.getUsuarioActual().getCuentaSeleccionada();
+        if (tecladoController != null) {
+
+            tecladoController.setListener(this);
+
+        }
+
+
+        cuenta = Sesion
+                .getUsuarioActual()
+                .getCuentaSeleccionada();
+
+
+        txtMonto.setText(
+                MONTO_INICIAL
+        );
+
 
         txtMesajefinal.setText(
                 "Saldo Disponible: S/ "
-                        + cuenta.getSaldo()
+                        + String.format(
+                        "%.2f",
+                        cuenta.getSaldo()
+                )
         );
+
     }
 
-    /**
-     * Botones de retiro rápido.
-     *
-     * Permiten seleccionar un monto sin
-     * necesidad de utilizar el teclado.
-     */
+
+    // RETIROS RAPIDOS
+
+
     @FXML
     public void montoRapido(ActionEvent event) {
 
-        Button btn = (Button) event.getSource();
 
-        String valor = btn.getText()
-                .replace("S/ ", "");
+        Button boton =
+                (Button) event.getSource();
 
-        txtMonto.setText(valor);
 
-        System.out.println(
-                "Monto seleccionado: S/ " + valor
-        );
+        String monto =
+                boton.getText()
+                        .replace("S/ ", "");
+
+
+        txtMonto.setText(monto);
+
     }
 
-    /**
-     * Limpia el monto ingresado y vuelve
-     * a mostrar el valor inicial.
-     */
-    @FXML
-    public void limpiarMonto() {
-
-        txtMonto.setText(MONTO_INICIAL);
-
-        txtMesajefinal.setText(
-                "Ingrese un nuevo monto."
-        );
-    }
-
+    // TECLADO
 
     @Override
     public void onDigito(String digito) {
 
-        String texto = txtMonto.getText();
 
-        if (texto.equals(MONTO_INICIAL)) {
+        String texto =
+                txtMonto.getText();
+
+
+        if(texto.equals(MONTO_INICIAL)){
 
             txtMonto.setText(digito);
 
-        } else {
+        }else{
 
             txtMonto.appendText(digito);
+
         }
+
     }
 
-    /**
-     * Borra únicamente el último carácter.
-     *
-     * Si el campo queda vacío, vuelve al
-     * valor inicial "S/ 0.00".
-     */
+
+
     @Override
     public void onBorrar() {
 
-        String texto = txtMonto.getText();
 
-        if (texto.equals(MONTO_INICIAL)) {
+        String texto =
+                txtMonto.getText();
+
+
+        if(texto.equals(MONTO_INICIAL)){
+
             return;
+
         }
 
-        if (!texto.isEmpty()) {
 
-            texto = texto.substring(0, texto.length() - 1);
+        texto =
+                texto.substring(
+                        0,
+                        texto.length()-1
+                );
 
-            if (texto.isEmpty()) {
 
-                txtMonto.setText(MONTO_INICIAL);
+        if(texto.isEmpty()){
 
-            } else {
+            txtMonto.setText(
+                    MONTO_INICIAL
+            );
 
-                txtMonto.setText(texto);
-            }
+        }else{
+
+            txtMonto.setText(texto);
+
         }
+
     }
 
-    /**
-     * Procesa el retiro de dinero.
-     *
-     * Validaciones:
-     * 1. Debe ingresarse un monto.
-     * 2. El monto debe ser mayor que cero.
-     * 3. El cajero no trabaja con monedas.
-     */
+
+
+
+    // CONFIRMAR RETIRO
+
+
+
     @Override
     public void onEntrar() {
 
-        String texto = txtMonto.getText();
 
-        if (texto.equals(MONTO_INICIAL)
-                || texto.isBlank()) {
+        String texto =
+                txtMonto.getText();
+
+
+        if(texto.equals(MONTO_INICIAL)
+                || texto.isBlank()){
+
 
             txtMesajefinal.setText(
                     "Ingrese un monto."
             );
 
             return;
+
         }
 
-        try {
-
-            int monto = Integer.parseInt(texto);
-
-            if (monto <= 0) {
-
-                txtMesajefinal.setText(
-                        "Monto inválido."
-                );
-
-                return;
-            }
-
-            if (monto % 10 != 0) {
-
-                txtMesajefinal.setText(
-                        "El cajero no trabaja con monedas."
-                );
-
-                return;
-            }
-
-            if (monto > cuenta.getSaldo()) {
-
-                txtMesajefinal.setText(
-                        "Saldo insuficiente."
-                );
-
-                return;
-            }
-
-            // Descontar dinero del saldo.
-            Transaccion t = Cajero.getInstancia().retirar(monto);
-
-            if(t != null){
-
-                txtMesajefinal.setText(
-                        "Retiro exitoso.\nSaldo: "
-                                + cuenta.getSaldo()
-                );
-
-            }else{
-
-                txtMesajefinal.setText(
-                        "No fue posible retirar."
-                );
-
-            }
 
 
-            // Volver al valor inicial.
-            txtMonto.setText(MONTO_INICIAL);
+        int monto =
+                Integer.parseInt(texto);
 
-        } catch (NumberFormatException e) {
+
+
+
+        if(monto <= 0){
+
 
             txtMesajefinal.setText(
-                    "Ingrese únicamente números."
+                    "Monto inválido."
             );
+
+            return;
+
         }
+
+
+
+        // Solo billetes
+        if(monto % 10 != 0){
+
+
+            txtMesajefinal.setText(
+                    "El cajero solo entrega billetes."
+            );
+
+            return;
+
+        }
+
+
+
+        if(monto > cuenta.getSaldo()){
+
+
+            txtMesajefinal.setText(
+                    "Saldo insuficiente."
+            );
+
+            return;
+
+        }
+
+
+
+
+        Transaccion transaccion =
+                Cajero.getInstancia()
+                        .retirar(monto);
+
+
+
+
+        if(transaccion != null){
+
+
+            abrirVoucher(transaccion);
+
+
+        }else{
+
+
+            txtMesajefinal.setText(
+                    "No fue posible realizar el retiro."
+            );
+
+
+        }
+
+
+
+        txtMonto.setText(
+                MONTO_INICIAL
+        );
+
+
     }
+
+    // ABRIR VOUCHER
+
+
+    private void abrirVoucher(
+            Transaccion transaccion
+    ){
+
+
+        try{
+
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass()
+                                    .getResource(
+                                            "/Voucher.fxml"
+                                    )
+                    );
+
+
+            Parent root =
+                    loader.load();
+
+
+
+            VoucherController controller =
+                    loader.getController();
+
+
+
+            controller.cargarVoucher(
+                    transaccion
+            );
+
+
+
+            Stage stage =
+                    (Stage)
+                            txtMonto
+                                    .getScene()
+                                    .getWindow();
+
+
+
+            stage.setScene(
+                    new Scene(root)
+            );
+
+
+            stage.show();
+
+
+
+        }catch(Exception e){
+
+
+            e.printStackTrace();
+
+        }
+
+
+    }
+
+
+    // CANCELAR
+
+
+
+    @FXML
+    public void irMenu(){
+
+
+        cambiarPantalla(
+                "/Menu.fxml"
+        );
+
+
+    }
+
+
+    private void cambiarPantalla(
+            String ruta
+    ){
+
+
+        try{
+
+
+            Parent root =
+                    FXMLLoader.load(
+                            getClass()
+                                    .getResource(
+                                            ruta
+                                    )
+                    );
+
+
+
+            Stage stage =
+                    (Stage)
+                            txtMonto
+                                    .getScene()
+                                    .getWindow();
+
+
+
+            stage.setScene(
+                    new Scene(root)
+            );
+
+
+            stage.show();
+
+
+
+        }catch(Exception e){
+
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+
 }

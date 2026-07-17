@@ -12,20 +12,6 @@ import utils.Sesion;
 import java.io.IOException;
 import java.net.URL;
 
-/**
- * Controlador del Menú Principal.
- *
- * Funciones implementadas:
- * - Abrir Retiro.
- * - Abrir Transferencia.
- * - Abrir Cambio de PIN.
- * - Cerrar sesión.
- *
- * Funciones futuras:
- * - Consultar saldo.
- * - Historial.
- * - Bloquear cuenta.
- */
 public class MenuController {
 
     @FXML
@@ -56,9 +42,8 @@ public class MenuController {
     @FXML
     public void initialize() {
 
-        // ==========================
         // CERRAR SESIÓN
-        // ==========================
+
         if (vboxCerrarSesion != null) {
 
             vboxCerrarSesion.setOnMouseClicked(
@@ -116,9 +101,9 @@ public class MenuController {
             );
 
         }
-        // ==========================
+
 // BLOQUEAR CUENTA
-// ==========================
+
         if (vboxBloquear != null) {
 
             vboxBloquear.setOnMouseClicked(
@@ -139,7 +124,7 @@ public class MenuController {
 
         Sesion.cerrarSesion();
 
-        cambiarPantalla("/Login.fxml");
+        cambiarPantalla("/LoginDNI.fxml");
     }
 
     /**
