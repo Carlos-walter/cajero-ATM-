@@ -90,9 +90,9 @@ public class CuentaBloqueadaController {
         );
     }
 
-    //=====================================================
+
     // BOTÓN FINALIZAR
-    //=====================================================
+
 
     /**
      * Finaliza la operación y regresa al Login.
@@ -108,7 +108,7 @@ public class CuentaBloqueadaController {
         try {
 
             Parent root = FXMLLoader.load(
-                    getClass().getResource("/Login.fxml")
+                    getClass().getResource("/LoginDNI.fxml")
             );
 
             Stage stage = (Stage)
