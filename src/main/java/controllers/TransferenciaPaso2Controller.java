@@ -1,5 +1,8 @@
 package controllers;
 
+import application.model.Cajero;
+import application.model.Cuenta;
+import application.model.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,144 +11,72 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-/**
- * Controlador del Paso 2 de la transferencia.
- *
- * Funciones:
- * - Mostrar los datos del destinatario.
- * - Regresar al Paso 1 para corregir la cuenta.
- * - Confirmar los datos y avanzar al Paso 3.
- *
- * FUTURO:
- * Los datos mostrados serán obtenidos desde la base de datos
- * mediante una consulta utilizando el número de cuenta
- * ingresado en el Paso 1.
- */
 public class TransferenciaPaso2Controller {
 
-    @FXML
-    private Label lblTitular;
+    @FXML private Label lblTitular;
+    @FXML private Label lblCuentaDestino;
+    @FXML private Label lblBanco;
+    @FXML private Label lblTipoCuenta;
+    @FXML private Button btnCorregir;
+    @FXML private Button btnConfirmar;
 
-    @FXML
-    private Label lblCuentaDestino;
-
-    @FXML
-    private Label lblBanco;
-
-    @FXML
-    private Label lblTipoCuenta;
-
-    @FXML
-    private Button btnCorregir;
-
-    @FXML
-    private Button btnConfirmar;
+    private Cuenta cuentaOrigen;
+    private Cuenta cuentaDestino;
 
     /**
-     * Inicializa la pantalla.
-     *
-     * FUTURO:
-     * Aquí se cargarán los datos obtenidos desde
-     * la base de datos.
+     * Recibe las cuentas real de origen y destino
+     * desde TransferenciaController (Paso 1).
      */
-    @FXML
-    public void initialize() {
+    public void setDatos(Cuenta cuentaOrigen, Cuenta cuentaDestino) {
 
-        // ==========================
-        // DATOS SIMULADOS
-        // ==========================
+        this.cuentaOrigen = cuentaOrigen;
+        this.cuentaDestino = cuentaDestino;
 
-        lblTitular.setText(
-                "JUAN CARLOS PÉREZ"
-        );
+        Usuario titular = cuentaDestino.getPropietario();
 
-        lblCuentaDestino.setText(
-                "1111111111111111111111"
-        );
-
-        lblBanco.setText(
-                "BANCO CENTRAL"
-        );
-
-        lblTipoCuenta.setText(
-                "Caja de Ahorro"
-        );
-
-        /*
-         * FUTURO - BASE DE DATOS
-         *
-         * SELECT nombre,
-         *        numero_cuenta,
-         *        banco,
-         *        tipo_cuenta
-         * FROM cuentas
-         * WHERE numero_cuenta = ?
-         *
-         * Con esos datos actualizar:
-         *
-         * lblTitular
-         * lblCuentaDestino
-         * lblBanco
-         * lblTipoCuenta
-         */
+        lblTitular.setText(titular != null ? titular.getNombre() : "----");
+        lblCuentaDestino.setText(cuentaDestino.getNumeroCuenta());
+        lblBanco.setText("Banco Central");
+        lblTipoCuenta.setText(cuentaDestino.getTipo());
     }
 
-    /**
-     * Regresa al Paso 1 para modificar
-     * la cuenta destino.
-     */
     @FXML
     public void volverPaso1() {
-
-        cambiarPantalla(
-                "/Transferencia.fxml"
-        );
+        cambiarPantalla("/Transferencia.fxml");
     }
 
-    /**
-     * Confirma que los datos son correctos
-     * y continúa al Paso 3.
-     */
     @FXML
     public void continuarPaso3() {
-
-        cambiarPantalla(
-                "/TransferenciaPaso3.fxml"
-        );
+        abrirPaso3();
     }
 
-    /**
-     * Método reutilizable para cambiar
-     * entre pantallas.
-     *
-     * @param rutaFxml Ruta del archivo FXML.
-     */
-    private void cambiarPantalla(String rutaFxml) {
+    private void abrirPaso3() {
 
         try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/TransferenciaPaso3.fxml"));
+            Parent root = loader.load();
 
-            Parent root = FXMLLoader.load(
-                    getClass().getResource(rutaFxml)
-            );
+            TransferenciaPaso3Controller controller = loader.getController();
+            controller.setDatos(cuentaOrigen, cuentaDestino);
 
-            Stage stage = (Stage)
-                    btnConfirmar
-                            .getScene()
-                            .getWindow();
-
-            stage.setScene(
-                    new Scene(root)
-            );
-
+            Stage stage = (Stage) btnConfirmar.getScene().getWindow();
+            stage.setScene(new Scene(root));
             stage.show();
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            System.out.println(
-                    "Error al abrir: "
-                            + rutaFxml
-            );
+    private void cambiarPantalla(String rutaFxml) {
 
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(rutaFxml));
+            Stage stage = (Stage) btnConfirmar.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

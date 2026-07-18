@@ -51,9 +51,6 @@ public class MenuController {
             );
         }
 
-        // ==========================
-        // RETIRAR DINERO
-        // ==========================
         if (vboxRetirar != null) {
 
             vboxRetirar.setOnMouseClicked(
@@ -61,9 +58,6 @@ public class MenuController {
             );
         }
 
-        // ==========================
-        // TRANSFERENCIA
-        // ==========================
         if (vboxTransferencia != null) {
 
             vboxTransferencia.setOnMouseClicked(
@@ -71,19 +65,12 @@ public class MenuController {
             );
         }
 
-        // ==========================
-        // CAMBIAR PIN
-        // ==========================
         if (vboxCambiarPin != null) {
 
             vboxCambiarPin.setOnMouseClicked(
                     event -> abrirCambiarPin()
             );
         }
-
-        // ==========================
-        // FUNCIONES FUTURAS
-        // ==========================
 
         if (vboxSaldo != null) {
 
@@ -101,7 +88,6 @@ public class MenuController {
 
         }
 
-// BLOQUEAR CUENTA
 
         if (vboxBloquear != null) {
 

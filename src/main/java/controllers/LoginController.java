@@ -37,7 +37,7 @@ public class LoginController implements TecladoListener {
         }
     }
 
-    // --- Métodos de la Interfaz TecladoListener ---
+
 
     @Override
     public void onDigito(String digito) {
@@ -81,9 +81,8 @@ public class LoginController implements TecladoListener {
     @Override
     public void onEntrar() {
 
-        String dni = "12345678";
+        String dni = Sesion.getUsuarioActual().getDni();
         String pin = PasswordField.getText();
-
         boolean acceso = Cajero.getInstancia().autenticarUsuario(dni, pin);
 
         if (acceso) {

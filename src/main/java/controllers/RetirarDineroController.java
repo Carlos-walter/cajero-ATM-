@@ -66,8 +66,6 @@ public class RetirarDineroController implements TecladoListener {
     }
 
 
-    // RETIROS RAPIDOS
-
 
     @FXML
     public void montoRapido(ActionEvent event) {
@@ -86,7 +84,6 @@ public class RetirarDineroController implements TecladoListener {
 
     }
 
-    // TECLADO
 
     @Override
     public void onDigito(String digito) {
@@ -149,10 +146,6 @@ public class RetirarDineroController implements TecladoListener {
 
 
 
-    // CONFIRMAR RETIRO
-
-
-
     @Override
     public void onEntrar() {
 
@@ -193,8 +186,6 @@ public class RetirarDineroController implements TecladoListener {
         }
 
 
-
-        // Solo billetes
         if(monto % 10 != 0){
 
 
@@ -254,7 +245,6 @@ public class RetirarDineroController implements TecladoListener {
 
     }
 
-    // ABRIR VOUCHER
 
 
     private void abrirVoucher(
@@ -317,8 +307,6 @@ public class RetirarDineroController implements TecladoListener {
 
     }
 
-
-    // CANCELAR
 
 
 

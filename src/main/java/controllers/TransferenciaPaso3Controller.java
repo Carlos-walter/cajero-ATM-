@@ -1,6 +1,8 @@
 package controllers;
 
-
+import application.model.Cajero;
+import application.model.Cuenta;
+import application.model.Transaccion;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,21 +11,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-
 /**
  * Controlador del Paso 3 de transferencia.
  *
  * Funciones:
  * - Capturar el monto mediante teclado táctil.
  * - Validar que exista un monto ingresado.
- * - Continuar hacia el voucher de transferencia.
+ * - Ejecutar la transferencia real y continuar hacia el voucher.
  */
 public class TransferenciaPaso3Controller implements TecladoListener {
 
-
     @FXML
     private TextField txtMonto;
-
 
     /**
      * Controlador del teclado incluido
@@ -40,46 +39,46 @@ public class TransferenciaPaso3Controller implements TecladoListener {
      */
     private String monto = "";
 
+    /**
+     * Cuentas real de origen y destino,
+     * recibidas desde TransferenciaPaso2Controller.
+     */
+    private Cuenta cuentaOrigen;
+    private Cuenta cuentaDestino;
+
     @FXML
     public void initialize(){
 
-
         // Conecta el teclado con esta pantalla
         if(tecladoController != null){
-
             tecladoController.setListener(this);
-
         }
-
 
         // Evita escritura manual
         txtMonto.setEditable(false);
 
-
         actualizarMonto();
-
     }
 
+    /**
+     * Recibe las cuentas desde TransferenciaPaso2Controller.
+     */
+    public void setDatos(Cuenta cuentaOrigen, Cuenta cuentaDestino) {
+        this.cuentaOrigen = cuentaOrigen;
+        this.cuentaDestino = cuentaDestino;
+    }
 
-
-
-     //Agrega números al monto.
-
+    /**
+     * Agrega números al monto.
+     */
     @Override
     public void onDigito(String digito){
 
-
         if(monto.length() < 8){
-
             monto += digito;
-
             actualizarMonto();
-
         }
-
     }
-
-
 
     /**
      * Elimina el último número ingresado.
@@ -87,39 +86,21 @@ public class TransferenciaPaso3Controller implements TecladoListener {
     @Override
     public void onBorrar(){
 
-
         if(!monto.isEmpty()){
-
-
-            monto =
-                    monto.substring(
-                            0,
-                            monto.length() - 1
-                    );
-
-
+            monto = monto.substring(0, monto.length() - 1);
             actualizarMonto();
-
         }
-
     }
-
-
 
     /**
      * Botón CONFIRMAR del teclado.
      *
-     * Abre el voucher.
+     * Ejecuta la transferencia y abre el voucher.
      */
     @Override
     public void onEntrar(){
         irVoucher();
-
     }
-
-
-
-
 
     /**
      * Actualiza el TextField mostrando
@@ -127,91 +108,78 @@ public class TransferenciaPaso3Controller implements TecladoListener {
      */
     private void actualizarMonto(){
 
-
         if(monto.isEmpty()){
-
-
-            txtMonto.setText(
-                    "S/ 0.00"
-            );
-
-
-        }else{
-
-
-            txtMonto.setText(
-                    "S/ "
-                            + monto
-                            + ".00"
-            );
-
-
+            txtMonto.setText("S/ 0.00");
+        } else {
+            txtMonto.setText("S/ " + monto + ".00");
         }
-
-
     }
-
 
     /**
      * Regresa al Paso 2.
      */
     @FXML
     public void volverPaso2(){
-
-
-        cambiarPantalla(
-                "/TransferenciaPaso2.fxml"
-        );
-
-
+        cambiarPantalla("/TransferenciaPaso2.fxml");
     }
 
-
-
     /**
-     * Valida el monto y abre el voucher.
+     * Valida el monto, ejecuta la transferencia real
+     * y abre el voucher con los datos reales.
      */
     private void irVoucher(){
 
-
-
-        if(monto.isEmpty()){
-
-
-            System.out.println(
-                    "Ingrese un monto"
-            );
-
-
+        if (monto.isEmpty()) {
+            System.out.println("Ingrese un monto");
             return;
-
         }
 
+        double cantidad = Double.parseDouble(monto);
 
+        if (cantidad <= 0) {
+            System.out.println("Monto inválido");
+            return;
+        }
 
-        double cantidad =
-                Double.parseDouble(monto);
+        if (cantidad > cuentaOrigen.getSaldo()) {
+            System.out.println("Saldo insuficiente");
+            return;
+        }
 
-
-
-        System.out.println(
-                "Monto confirmado: S/ "
-                        + cantidad
+        Transaccion transaccion = Cajero.getInstancia().transferir(
+                cuentaOrigen.getNumeroCuenta(),
+                cuentaDestino.getNumeroCuenta(),
+                cantidad
         );
 
+        if (transaccion == null) {
+            System.out.println("No fue posible realizar la transferencia");
+            return;
+        }
 
-
-
-
-        cambiarPantalla(
-                "/Voucher.fxml"
-        );
-
-
+        abrirVoucher(transaccion);
     }
 
+    /**
+     * Abre el voucher con la transacción real.
+     */
+    private void abrirVoucher(Transaccion transaccion) {
 
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Voucher.fxml"));
+            Parent root = loader.load();
 
+            VoucherController controller = loader.getController();
+            controller.cargarVoucher(transaccion);
+
+            Stage stage = (Stage) btnRegresar.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Método reutilizable para cambiar escenas.
@@ -220,50 +188,15 @@ public class TransferenciaPaso3Controller implements TecladoListener {
      */
     private void cambiarPantalla(String ruta){
 
-
         try{
-
-
-            Parent root =
-                    FXMLLoader.load(
-                            getClass()
-                                    .getResource(ruta)
-                    );
-
-
-
-            Stage stage =
-                    (Stage)
-                            btnRegresar
-                                    .getScene()
-                                    .getWindow();
-
-
-
-            stage.setScene(
-                    new Scene(root)
-            );
-
-
+            Parent root = FXMLLoader.load(getClass().getResource(ruta));
+            Stage stage = (Stage) btnRegresar.getScene().getWindow();
+            stage.setScene(new Scene(root));
             stage.show();
 
-
-
         }catch(Exception e){
-
-
-            System.out.println(
-                    "Error al abrir: "
-                            + ruta
-            );
-
-
+            System.out.println("Error al abrir: " + ruta);
             e.printStackTrace();
-
-
         }
-
-
     }
-
 }

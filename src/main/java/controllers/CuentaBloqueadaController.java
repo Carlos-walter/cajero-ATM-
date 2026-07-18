@@ -55,10 +55,6 @@ public class CuentaBloqueadaController {
         cargarTicket();
     }
 
-    //=====================================================
-    // TICKET DE SEGURIDAD
-    //=====================================================
-
     /**
      * Llena el ticket con información simulada.
      *

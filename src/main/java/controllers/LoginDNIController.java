@@ -40,9 +40,6 @@ public class LoginDNIController implements TecladoListener {
     }
 
 
-    // ==========================
-    // TECLADO
-    // ==========================
 
     @Override
     public void onDigito(String digito) {
@@ -83,7 +80,6 @@ public class LoginDNIController implements TecladoListener {
         String dni = txtDni.getText().trim();
 
 
-        // Validar cantidad de dígitos
         if (dni.length() < MAX_DIGITOS) {
 
             lblBienvenidaPIN.setText(
@@ -95,7 +91,6 @@ public class LoginDNIController implements TecladoListener {
         }
 
 
-        // Validar solo números
         if (!dni.matches("\\d{8}")) {
 
             lblBienvenidaPIN.setText(
@@ -107,7 +102,6 @@ public class LoginDNIController implements TecladoListener {
         }
 
 
-        // Buscar usuario
         Usuario usuario = Cajero.getInstancia()
                 .buscarUsuarioPorDNI(dni);
 
@@ -123,7 +117,6 @@ public class LoginDNIController implements TecladoListener {
         }
 
 
-        // Guardar usuario encontrado
         Sesion.setUsuarioActual(usuario);
 
 
@@ -135,11 +128,6 @@ public class LoginDNIController implements TecladoListener {
 
     }
 
-
-
-    // ==========================
-    // CAMBIO DE PANTALLA
-    // ==========================
 
     private void cambiarPantalla(String rutaFXML) {
 

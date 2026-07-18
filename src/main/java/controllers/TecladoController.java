@@ -5,8 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 public class TecladoController {
-    // El teclado NO conoce a LoginController.
-    // Solo conoce a cualquier clase que implemente TecladoListener
     private TecladoListener listener;
 
     public void setListener(TecladoListener listener) {

@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import application.model.Cajero;
 import application.model.Cuenta;
 import application.model.Usuario;
+import utils.Sesion;
 
 public class TransferenciaController implements TecladoListener {
 
@@ -38,7 +39,6 @@ public class TransferenciaController implements TecladoListener {
 
         }
 
-        // Asegura que el campo empiece vacío
         txtCuentaDestino.clear();
 
         actualizarContador();
@@ -94,9 +94,6 @@ public class TransferenciaController implements TecladoListener {
         }
     }
 
-    // ==========================
-    // TECLADO NUMÉRICO
-    // ==========================
 
     /**
      * Agrega un dígito al TextField.
@@ -164,21 +161,44 @@ public class TransferenciaController implements TecladoListener {
         Cuenta cuentaEncontrada = null;
 
         for (Cuenta cuenta : Cajero.getInstancia().getCuentas()) {
-
             if (cuenta.getNumeroCuenta().equals(cuentaDestino)) {
-
                 cuentaEncontrada = cuenta;
                 break;
             }
         }
 
         if (cuentaEncontrada == null) {
-
             lblMensaje.setText("La cuenta no existe.");
             return;
         }
 
-        cambiarPantalla("/TransferenciaPaso2.fxml");
+        Cuenta cuentaOrigen = Sesion.getUsuarioActual().getCuentaSeleccionada();
+
+        if (cuentaEncontrada.getNumeroCuenta().equals(cuentaOrigen.getNumeroCuenta())) {
+            lblMensaje.setText("No puede transferir a su propia cuenta.");
+            return;
+        }
+
+        abrirPaso2(cuentaOrigen, cuentaEncontrada);
+    }
+
+    private void abrirPaso2(Cuenta origen, Cuenta destino) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/TransferenciaPaso2.fxml"));
+            Parent root = loader.load();
+
+            TransferenciaPaso2Controller controller = loader.getController();
+            controller.setDatos(origen, destino);
+
+            Stage stage = (Stage) btnCancelar.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            lblMensaje.setText("Error al abrir la siguiente pantalla.");
+        }
     }
 
     /**
