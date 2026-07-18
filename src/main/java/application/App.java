@@ -18,10 +18,10 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        // =====================================================
+
         // DATOS TEMPORALES
         // Se eliminarán cuando se conecte SQL Server.
-        // =====================================================
+
 
         Usuario u1 = new Usuario(
                 "Ivan",

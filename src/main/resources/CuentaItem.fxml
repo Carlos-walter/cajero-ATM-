@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="248.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CuentaItemController">
    <children>
       <ImageView fx:id="ImageView" fitHeight="213.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
@@ -42,7 +41,7 @@
                   <Font size="30.0" />
                </font>
             </Label>
-            <Button fx:id="btnSeleccionar" mnemonicParsing="false" prefHeight="62.0" prefWidth="665.0" text="Seleccionar">
+            <Button fx:id="btnSeleccionar" mnemonicParsing="false" onAction="#seleccionarCuenta" prefHeight="62.0" prefWidth="665.0" text="Seleccionar">
                <font>
                   <Font name="System Bold" size="30.0" />
                </font>

@@ -4,6 +4,7 @@ import application.model.Cuenta;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import utils.Sesion;
 
 public class CuentaItemController {
 
@@ -24,11 +25,28 @@ public class CuentaItemController {
 
     private Cuenta cuenta;
 
-    // Controlador de la pantalla principal
     private CuentaSaldoController controllerPadre;
 
     @FXML
-    public void initialize() {
+    private void seleccionarCuenta() {
+
+        if (cuenta == null) {
+            System.out.println("No hay cuenta seleccionada.");
+            return;
+        }
+
+        if (Sesion.getUsuarioActual() == null) {
+            System.out.println("No existe una sesión activa.");
+            return;
+        }
+
+        Sesion.getUsuarioActual().setCuentaSeleccionada(cuenta);
+
+        System.out.println("Cuenta seleccionada: " + cuenta.getNumeroCuenta());
+
+        if (controllerPadre != null) {
+            controllerPadre.cambiarPantalla("/Menu.fxml");
+        }
 
     }
 
@@ -40,9 +58,9 @@ public class CuentaItemController {
 
         lblNumeroCuenta.setText(ocultarNumero(cuenta.getNumeroCuenta()));
 
-        lblSaldo.setText(String.format("Saldo: S/ %.2f", cuenta.getSaldo()));
-
         lblEstado.setText("Activa");
+
+        lblSaldo.setText(String.format("Saldo: S/ %.2f", cuenta.getSaldo()));
     }
 
     public void setControllerPadre(CuentaSaldoController controllerPadre) {
@@ -55,12 +73,8 @@ public class CuentaItemController {
             return numero;
         }
 
-        return "**** **** **** **** **"
-                + numero.substring(numero.length() - 4);
-    }
-
-    public Cuenta getCuenta() {
-        return cuenta;
+        return "**** **** **** **** **" +
+                numero.substring(numero.length() - 4);
     }
 
 }
