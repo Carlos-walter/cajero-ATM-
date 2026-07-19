@@ -134,6 +134,18 @@ public class Auditoria {
     }
 
     public int totalOperaciones() {
-        return transacciones.size();
+
+        try {
+
+            return (int) coleccionTransacciones.countDocuments();
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Error contando operaciones: " + e.getMessage()
+            );
+
+            return 0;
+        }
     }
 }

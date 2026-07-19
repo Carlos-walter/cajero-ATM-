@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="
+             http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+
+
+    <persistence-unit name="PersistenciaCAJERO_AUTOMATICO">
+
+        <provider>
+            org.hibernate.jpa.HibernatePersistenceProvider
+        </provider>
+
+
+        <class>application.model.entity.EntidadUsuario</class>
+
+        <class>application.model.entity.EntidadCuenta</class>
+
+        <class>application.model.entity.EntidadTransaccion</class>
+
+
+        <properties>
+
+
+            <property
+                    name="javax.persistence.jdbc.driver"
+                    value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+
+
+            <property
+                    name="javax.persistence.jdbc.url"
+                    value="jdbc:sqlserver://localhost:1433;databaseName=CAJERO_AUTOMATICO;encrypt=true;trustServerCertificate=true"/>
+
+
+            <property
+                    name="javax.persistence.jdbc.user"
+                    value="sa"/>
+
+
+            <property
+                    name="javax.persistence.jdbc.password"
+                    value="123456"/>
+
+
+            <property
+                    name="hibernate.dialect"
+                    value="org.hibernate.dialect.SQLServerDialect"/>
+
+
+            <property
+                    name="hibernate.show_sql"
+                    value="true"/>
+
+
+            <property
+                    name="hibernate.format_sql"
+                    value="true"/>
+
+
+            <property
+                    name="hibernate.hbm2ddl.auto"
+                    value="none"/>
+
+
+        </properties>
+
+
+    </persistence-unit>
+
+
+</persistence>

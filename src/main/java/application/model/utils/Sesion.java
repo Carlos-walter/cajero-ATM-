@@ -1,4 +1,4 @@
-package utils;
+package application.model.utils;
 
 import application.model.Usuario;
 

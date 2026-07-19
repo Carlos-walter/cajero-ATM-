@@ -1,5 +1,12 @@
 package controllers;
 
+import application.model.Cuenta;
+import application.model.Usuario;
+import application.model.entity.EntidadCuenta;
+import application.model.dao.CuentaDAO;
+import application.model.entity.EntidadUsuario;
+import application.model.utils.Sesion;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -8,15 +15,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
-import application.model.Cajero;
-import application.model.Cuenta;
-import application.model.Usuario;
-import utils.Sesion;
+
 
 public class TransferenciaController implements TecladoListener {
 
+
     @FXML
     private TextField txtCuentaDestino;
+
 
     @FXML
     private Label lblMensaje;
@@ -25,13 +31,22 @@ public class TransferenciaController implements TecladoListener {
     @FXML
     private TecladoController tecladoController;
 
-    /**
-     * Longitud máxima permitida para una cuenta.
-     */
-    private static final int MAX_DIGITOS = 22;
+
+    @FXML
+    private Button btnCancelar;
+
+
+
+    private static final int MAX_DIGITOS = 15;
+
+
+    private final CuentaDAO cuentaDAO = new CuentaDAO();
+
+
 
     @FXML
     public void initialize() {
+
 
         if (tecladoController != null) {
 
@@ -39,202 +54,338 @@ public class TransferenciaController implements TecladoListener {
 
         }
 
+
         txtCuentaDestino.clear();
 
         actualizarContador();
+
     }
 
-    /**
-     * Actualiza:
-     * Soportando hasta 22 dígitos (X/22 en pantalla)
-     */
+
+
+
     private void actualizarContador() {
 
-        int cantidad = txtCuentaDestino.getText().length();
+
+        int cantidad =
+                txtCuentaDestino.getText().length();
+
 
         lblMensaje.setText(
-                "Soportando hasta 22 dígitos ("
+                "Cuenta: "
                         + cantidad
-                        + "/22 en pantalla)."
+                        + "/15 dígitos"
         );
+
     }
 
 
-    /**
-     * Borra completamente el número ingresado.
-     */
-    @FXML
-    public void borrarTodo() {
-
-        txtCuentaDestino.clear();
-
-        actualizarContador();
-    }
-    @FXML
-    private Button btnCancelar;
-    @FXML
-    public void volverMenu() {
-
-        try {
-
-            Parent root = FXMLLoader.load(
-                    getClass().getResource("/Menu.fxml")
-            );
-
-            Stage stage = (Stage) btnCancelar
-                    .getScene()
-                    .getWindow();
-
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-    }
 
 
-    /**
-     * Agrega un dígito al TextField.
-     * Máximo: 22 caracteres.
-     */
     @Override
     public void onDigito(String digito) {
 
-        if (txtCuentaDestino.getText().length() < MAX_DIGITOS) {
+
+        if(txtCuentaDestino.getText().length() < MAX_DIGITOS){
+
 
             txtCuentaDestino.appendText(digito);
 
             actualizarContador();
+
         }
+
     }
 
-    /**
-     * Borra únicamente el último carácter.
-     */
+
+
+
     @Override
     public void onBorrar() {
 
-        String texto = txtCuentaDestino.getText();
 
-        if (!texto.isEmpty()) {
+        String texto =
+                txtCuentaDestino.getText();
+
+
+
+        if(!texto.isEmpty()){
+
 
             txtCuentaDestino.setText(
-                    texto.substring(0, texto.length() - 1)
+                    texto.substring(
+                            0,
+                            texto.length()-1
+                    )
             );
+
 
             actualizarContador();
+
         }
+
     }
 
 
 
-    /**
-     * Se ejecuta al presionar CONFIRMAR del teclado.
-     *
-     * FUTURA LÓGICA CON BASE DE DATOS:
-     *
-     * 1. Validar que la cuenta no esté vacía.
-     * 2. Verificar que tenga exactamente 22 dígitos.
-     * 3. SELECT * FROM cuentas WHERE numero_cuenta = ?
-     * 4. Si no existe → mostrar error.
-     * 5. Si existe → obtener datos del destinatario.
-     * 6. Guardar la cuenta seleccionada.
-     * 7. Abrir TransferenciaPaso2.fxml
-     */
+
+    @FXML
+    public void borrarTodo(){
+
+
+        txtCuentaDestino.clear();
+
+        actualizarContador();
+
+    }
+
+
+
+
+
+
     @Override
-    public void onEntrar() {
+    public void onEntrar(){
 
-        String cuentaDestino = txtCuentaDestino.getText().trim();
 
-        if (cuentaDestino.isEmpty()) {
-            lblMensaje.setText("Ingrese una cuenta.");
-            return;
-        }
-
-        if (cuentaDestino.length() != 22) {
-            lblMensaje.setText("La cuenta debe tener 22 dígitos.");
-            return;
-        }
-
-        Cuenta cuentaEncontrada = null;
-
-        for (Cuenta cuenta : Cajero.getInstancia().getCuentas()) {
-            if (cuenta.getNumeroCuenta().equals(cuentaDestino)) {
-                cuentaEncontrada = cuenta;
-                break;
-            }
-        }
-
-        if (cuentaEncontrada == null) {
-            lblMensaje.setText("La cuenta no existe.");
-            return;
-        }
-
-        Cuenta cuentaOrigen = Sesion.getUsuarioActual().getCuentaSeleccionada();
-
-        if (cuentaEncontrada.getNumeroCuenta().equals(cuentaOrigen.getNumeroCuenta())) {
-            lblMensaje.setText("No puede transferir a su propia cuenta.");
-            return;
-        }
-
-        abrirPaso2(cuentaOrigen, cuentaEncontrada);
-    }
-
-    private void abrirPaso2(Cuenta origen, Cuenta destino) {
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/TransferenciaPaso2.fxml"));
-            Parent root = loader.load();
-
-            TransferenciaPaso2Controller controller = loader.getController();
-            controller.setDatos(origen, destino);
-
-            Stage stage = (Stage) btnCancelar.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            lblMensaje.setText("Error al abrir la siguiente pantalla.");
-        }
-    }
-
-    /**
-     * Cambia entre pantallas.
-     *
-     * @param rutaFxml Ruta del archivo FXML.
-     */
+        String numeroCuenta =
+                txtCuentaDestino.getText().trim();
 
 
 
+        if(numeroCuenta.isEmpty()){
 
-    private void cambiarPantalla(String rutaFxml) {
-        try {
 
-            Parent root = FXMLLoader.load(
-                    getClass().getResource(rutaFxml)
+            lblMensaje.setText(
+                    "Ingrese una cuenta."
             );
 
-            Stage stage = (Stage)
-                    btnCancelar
-                            .getScene()
-                            .getWindow();
+            return;
+
+        }
+
+
+
+        if(numeroCuenta.length() != 15){
+
+
+            lblMensaje.setText(
+                    "La cuenta debe tener 20 dígitos."
+            );
+
+            return;
+
+        }
+
+
+
+        // BUSCAR EN SQL
+        EntidadCuenta entidadDestino =
+                cuentaDAO.buscarPorNumero(numeroCuenta);
+
+
+
+        if(entidadDestino == null){
+
+
+            lblMensaje.setText(
+                    "La cuenta no existe."
+            );
+
+            return;
+
+        }
+
+
+
+
+        // CONVERTIR ENTIDAD -> MODELO
+
+        EntidadUsuario entidadUsuario =
+                entidadDestino.getPropietario();
+
+
+        Usuario usuarioDestino =
+                new Usuario(
+                        entidadUsuario.getNombre(),
+                        entidadUsuario.getPin(),
+                        entidadUsuario.getDni()
+                );
+
+
+        Cuenta cuentaDestino =
+                new Cuenta(
+                        entidadDestino.getNumero_Cuenta(),
+                        entidadDestino.getTipo(),
+                        entidadDestino.getSaldo(),
+                        usuarioDestino
+                );
+
+
+        Cuenta cuentaOrigen =
+                Sesion.getUsuarioActual()
+                        .getCuentaSeleccionada();
+
+
+
+
+        if(cuentaOrigen == null){
+
+
+            lblMensaje.setText(
+                    "No hay cuenta seleccionada."
+            );
+
+            return;
+
+        }
+
+
+
+
+
+        if(cuentaOrigen.getNumeroCuenta()
+                .equals(cuentaDestino.getNumeroCuenta())){
+
+
+            lblMensaje.setText(
+                    "No puede transferir a su propia cuenta."
+            );
+
+            return;
+
+        }
+
+
+
+        abrirPaso2(
+                cuentaOrigen,
+                cuentaDestino
+        );
+
+    }
+
+
+
+
+
+
+
+    private void abrirPaso2(
+            Cuenta origen,
+            Cuenta destino
+    ){
+
+
+        try{
+
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass()
+                                    .getResource(
+                                            "/TransferenciaPaso2.fxml"
+                                    )
+                    );
+
+
+            Parent root =
+                    loader.load();
+
+
+
+            TransferenciaPaso2Controller controller =
+                    loader.getController();
+
+
+
+            controller.setDatos(
+                    origen,
+                    destino
+            );
+
+
+
+            Stage stage =
+                    (Stage)
+                            btnCancelar
+                                    .getScene()
+                                    .getWindow();
+
+
 
             stage.setScene(
                     new Scene(root)
             );
 
+
             stage.show();
 
-        } catch (Exception e) {
 
-            System.out.println(
-                    "Error al abrir: " + rutaFxml
-            );
+
+        }catch(Exception e){
+
 
             e.printStackTrace();
+
+
+            lblMensaje.setText(
+                    "Error al abrir transferencia."
+            );
+
         }
+
+
     }
+
+
+
+
+
+
+
+    @FXML
+    public void volverMenu(){
+
+
+        try{
+
+
+            Parent root =
+                    FXMLLoader.load(
+                            getClass()
+                                    .getResource(
+                                            "/Menu.fxml"
+                                    )
+                    );
+
+
+            Stage stage =
+                    (Stage)
+                            btnCancelar
+                                    .getScene()
+                                    .getWindow();
+
+
+
+            stage.setScene(
+                    new Scene(root)
+            );
+
+
+            stage.show();
+
+
+
+        }catch(Exception e){
+
+
+            e.printStackTrace();
+
+        }
+
+
+    }
+
+
 }

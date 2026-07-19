@@ -53,9 +53,6 @@ public class VoucherController {
     @FXML
     public void initialize() {
 
-        // Datos de prueba.
-        // Cuando se abra desde una operación,
-        // cargarVoucher(...) reemplazará estos valores.
 
         lblFechaLlenar.setText("16/07/2026");
         lblHoraLlenar.setText("10:45:32");
@@ -147,9 +144,7 @@ public class VoucherController {
 
     }
 
-    /**
-     * Oculta los primeros dígitos de una cuenta.
-     */
+
     private String ocultarCuenta(String cuenta) {
 
         if (cuenta == null)

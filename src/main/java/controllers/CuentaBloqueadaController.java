@@ -12,23 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Controlador de la pantalla Cuenta Bloqueada.
- *
- * Esta pantalla puede abrirse desde dos escenarios:
- *
- * 1. El usuario decide bloquear voluntariamente su cuenta.
- * 2. El sistema bloquea automáticamente la cuenta al superar
- *    el número máximo de intentos de PIN incorrectos.
- *
- * Actualmente los datos del ticket son simulados.
- *
- * FUTURO:
- * - Obtener la información desde la base de datos.
- * - Registrar el evento de bloqueo.
- * - Guardar el motivo del bloqueo.
- * - Generar un código único de referencia.
- */
+
 public class CuentaBloqueadaController {
 
 
@@ -55,13 +39,7 @@ public class CuentaBloqueadaController {
         cargarTicket();
     }
 
-    /**
-     * Llena el ticket con información simulada.
-     *
-     * FUTURO:
-     * Estos datos deberán venir desde la base de datos
-     * después de registrar el bloqueo.
-     */
+
     private void cargarTicket() {
 
         lblCodigoRef.setText(
@@ -87,17 +65,7 @@ public class CuentaBloqueadaController {
     }
 
 
-    // BOTÓN FINALIZAR
 
-
-    /**
-     * Finaliza la operación y regresa al Login.
-     *
-     * FUTURO:
-     * - Cerrar sesión.
-     * - Limpiar datos temporales.
-     * - Registrar hora de salida.
-     */
     @FXML
     private void volverLogin() {
 

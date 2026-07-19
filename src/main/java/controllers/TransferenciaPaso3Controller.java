@@ -11,14 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-/**
- * Controlador del Paso 3 de transferencia.
- *
- * Funciones:
- * - Capturar el monto mediante teclado táctil.
- * - Validar que exista un monto ingresado.
- * - Ejecutar la transferencia real y continuar hacia el voucher.
- */
+
 public class TransferenciaPaso3Controller implements TecladoListener {
 
     @FXML
@@ -34,9 +27,6 @@ public class TransferenciaPaso3Controller implements TecladoListener {
     @FXML
     private Button btnRegresar;
 
-    /**
-     * Guarda el monto digitado.
-     */
     private String monto = "";
 
     /**
@@ -60,17 +50,12 @@ public class TransferenciaPaso3Controller implements TecladoListener {
         actualizarMonto();
     }
 
-    /**
-     * Recibe las cuentas desde TransferenciaPaso2Controller.
-     */
     public void setDatos(Cuenta cuentaOrigen, Cuenta cuentaDestino) {
         this.cuentaOrigen = cuentaOrigen;
         this.cuentaDestino = cuentaDestino;
     }
 
-    /**
-     * Agrega números al monto.
-     */
+
     @Override
     public void onDigito(String digito){
 
@@ -80,9 +65,6 @@ public class TransferenciaPaso3Controller implements TecladoListener {
         }
     }
 
-    /**
-     * Elimina el último número ingresado.
-     */
     @Override
     public void onBorrar(){
 
@@ -92,20 +74,13 @@ public class TransferenciaPaso3Controller implements TecladoListener {
         }
     }
 
-    /**
-     * Botón CONFIRMAR del teclado.
-     *
-     * Ejecuta la transferencia y abre el voucher.
-     */
+
     @Override
     public void onEntrar(){
         irVoucher();
     }
 
-    /**
-     * Actualiza el TextField mostrando
-     * el monto actual.
-     */
+
     private void actualizarMonto(){
 
         if(monto.isEmpty()){
@@ -115,18 +90,13 @@ public class TransferenciaPaso3Controller implements TecladoListener {
         }
     }
 
-    /**
-     * Regresa al Paso 2.
-     */
+
     @FXML
     public void volverPaso2(){
         cambiarPantalla("/TransferenciaPaso2.fxml");
     }
 
-    /**
-     * Valida el monto, ejecuta la transferencia real
-     * y abre el voucher con los datos reales.
-     */
+
     private void irVoucher(){
 
         if (monto.isEmpty()) {
@@ -160,9 +130,7 @@ public class TransferenciaPaso3Controller implements TecladoListener {
         abrirVoucher(transaccion);
     }
 
-    /**
-     * Abre el voucher con la transacción real.
-     */
+
     private void abrirVoucher(Transaccion transaccion) {
 
         try {
@@ -181,11 +149,7 @@ public class TransferenciaPaso3Controller implements TecladoListener {
         }
     }
 
-    /**
-     * Método reutilizable para cambiar escenas.
-     *
-     * @param ruta ruta del archivo FXML
-     */
+
     private void cambiarPantalla(String ruta){
 
         try{

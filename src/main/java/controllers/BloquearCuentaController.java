@@ -7,11 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-/**
- * UPDATE cuentas
- * SET estado = 'BLOQUEADA'
- * WHERE id_cuenta = ?
- */
+
 public class BloquearCuentaController {
 
     @FXML
@@ -20,23 +16,14 @@ public class BloquearCuentaController {
     @FXML
     private Button btnBloquearCuenta;
 
-    /**
-     * Regresa al menú principal.
-     */
+
     @FXML
     public void volverMenu() {
 
         cambiarPantalla("/Menu.fxml");
     }
 
-    /**
-     * Simula el bloqueo de la cuenta.
-     *
-     * FUTURO:
-     * Aquí se ejecutará el UPDATE en la base
-     * de datos para cambiar el estado de la
-     * cuenta a BLOQUEADA.
-     */
+
     @FXML
     public void bloquearCuenta() {
 
@@ -49,9 +36,7 @@ public class BloquearCuentaController {
         );
     }
 
-    /**
-     * Método reutilizable para cambiar de pantalla.
-     */
+
     private void cambiarPantalla(String rutaFxml) {
 
         try {

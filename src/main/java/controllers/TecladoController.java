@@ -27,7 +27,7 @@ public class TecladoController {
     @FXML
     void handleEntrar(ActionEvent event) {
         if (listener != null) {
-            // El teclado solo grita: "¡Alguien presionó Entrar!"
+            //Alguien presionó Entrar
             listener.onEntrar();
         }
     }

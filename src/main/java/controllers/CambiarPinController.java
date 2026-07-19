@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import utils.Sesion;
+import application.model.utils.Sesion;
 
 public class CambiarPinController implements TecladoListener {
 
@@ -39,31 +39,18 @@ public class CambiarPinController implements TecladoListener {
     @FXML
     private TecladoController tecladoController;
 
-    /**
-     * PIN actual simulado.
-     * Más adelante debe venir desde la base de datos.
-     */
+
     private String pinActualSistema = "1234";
 
-    /**
-     * Guarda temporalmente el nuevo PIN
-     * mientras el usuario lo confirma.
-     */
+
     private String pinNuevoTemporal = "";
 
-    /**
-     * Estado actual del flujo.
-     */
+
     private EstadoCambioPin estado = EstadoCambioPin.VALIDAR_PIN_ACTUAL;
 
-    /**
-     * Máximo de dígitos permitidos para el PIN.
-     */
+
     private static final int MAX_DIGITOS = 4;
 
-    /**
-     * Inicializa la pantalla.
-     */
     @FXML
     public void initialize() {
 
@@ -78,9 +65,7 @@ public class CambiarPinController implements TecladoListener {
         actualizarInstruccion();
     }
 
-    /**
-     * Actualiza el texto superior según el paso actual.
-     */
+
     private void actualizarInstruccion() {
 
         switch (estado) {
@@ -102,18 +87,14 @@ public class CambiarPinController implements TecladoListener {
         }
     }
 
-    /**
-     * Verifica si el texto ingresado contiene exactamente 4 dígitos.
-     */
+
     private boolean esPinValido(String pin) {
         return pin != null && pin.matches("\\d{4}");
     }
 
 
 
-    /**
-     * Agrega un dígito al PIN.
-     */
+
     @Override
     public void onDigito(String digito) {
 
@@ -128,9 +109,6 @@ public class CambiarPinController implements TecladoListener {
         }
     }
 
-    /**
-     * Borra únicamente el último dígito.
-     */
     @Override
     public void onBorrar() {
 
@@ -145,15 +123,6 @@ public class CambiarPinController implements TecladoListener {
         }
     }
 
-    /**
-     * Acción principal del teclado.
-     *
-     * Flujo:
-     * 1. Validar PIN actual.
-     * 2. Pedir nuevo PIN.
-     * 3. Confirmar nuevo PIN.
-     * 4. Guardar el cambio.
-     */
     @Override
     public void onEntrar() {
 

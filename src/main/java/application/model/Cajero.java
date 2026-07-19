@@ -1,6 +1,14 @@
 package application.model;
 
+import application.model.dao.CuentaDAO;
+import application.model.dao.TransaccionDAO;
+import application.model.dao.UsuarioDAO;
+import application.model.entity.EntidadCuenta;
+import application.model.entity.EntidadTransaccion;
+import application.model.entity.EntidadUsuario;
+
 import java.util.*;
+
 
 public class Cajero {
     private static Cajero instancia;
@@ -10,18 +18,35 @@ public class Cajero {
     private final Map<Billetes, Integer> billetes;
     private final List<Usuario> usuarios;
     private final Auditoria auditoria;
+    private final CuentaDAO cuentaDAO;
+    private final TransaccionDAO transaccionDAO;
+    private final UsuarioDAO usuarioDAO;
 
     private Cajero(List<Usuario> usuarios) {
+
         auditoria = new Auditoria();
+
+        cuentaDAO = new CuentaDAO();
+
+        transaccionDAO = new TransaccionDAO();
+        usuarioDAO = new UsuarioDAO();
+
         this.usuarios = usuarios;
+
         this.cuentas = new ArrayList<>();
+
         for (Usuario u : usuarios) {
             this.cuentas.addAll(u.getCuentas());
         }
+
+
         this.usuarioActual = null;
+
         this.intentos = 0;
 
+
         billetes = new HashMap<>();
+
         for (Billetes b : Billetes.values()) {
             billetes.put(b, 250);
         }
@@ -49,35 +74,82 @@ public class Cajero {
 
 
     public boolean autenticarUsuario(String dni, String pin) {
+
+
         if (intentos >= 3) {
-            String nombreUser = (usuarioActual != null) ? usuarioActual.getNombre() : "DNI: " + dni;
-            auditoria.registrarEvento(nombreUser + " intento fallido de autentificacion");
+
+            auditoria.registrarEvento(
+                    "Usuario bloqueado por intentos fallidos: " + dni
+            );
+
             return false;
         }
-        for (Usuario usuario : usuarios) {
-            if (usuario.getDni().equals(dni) && usuario.validarPin(pin)) {
-                this.usuarioActual = usuario;
-                this.intentos = 0;
-                auditoria.registrarEvento(usuarioActual.getNombre() + " autenticado correctamente");
-                return true;
-            }
+
+
+
+        EntidadUsuario entidad =
+                usuarioDAO.autenticar(dni, pin);
+
+
+
+        if(entidad != null){
+
+
+            Usuario usuario =
+                    new Usuario(entidad);
+
+
+            this.usuarioActual = usuario;
+
+
+            this.intentos = 0;
+
+
+            auditoria.registrarEvento(
+                    usuario.getNombre()
+                            + " autenticado correctamente"
+            );
+
+
+            return true;
         }
+
+
+
         intentos++;
+
+
+        auditoria.registrarEvento(
+                "Intento fallido de autenticación DNI: "
+                        + dni
+        );
+
+
         return false;
     }
-
     public double consultarSaldo(String numeroCuenta) {
-        if (usuarioActual == null) {
+
+        if(usuarioActual == null){
             return -1;
         }
 
-        for (Cuenta cuenta : usuarioActual.getCuentas()) {
-            if (cuenta.getNumeroCuenta().equals(numeroCuenta)) {
-                auditoria.registrarEvento(usuarioActual.getNombre() + " consulto su saldo");
-                return cuenta.getSaldo();
-            }
+
+        EntidadCuenta cuenta =
+                cuentaDAO.buscarPorNumero(numeroCuenta);
+
+
+        if(cuenta == null){
+            return -1;
         }
-        return -1;
+
+
+        auditoria.registrarEvento(
+                usuarioActual.getNombre()
+                        + " consultó su saldo"
+        );
+
+
+        return cuenta.getSaldo();
     }
 
     public boolean cambiarPin(String nuevoPin) {
@@ -135,38 +207,185 @@ public class Cajero {
     }
 
     public Transaccion retirar(double monto) {
-        if (usuarioActual == null) return null;
 
-        if (!hayBilletesSuficientes((int) monto)) {
-            System.out.println("El cajero no dispone de billetes suficientes");
+        if (usuarioActual == null) {
             return null;
         }
-        Cuenta cuenta = usuarioActual.getCuentaSeleccionada();
-        Transaccion transaccion = cuenta.retirar(monto);
+
+
+        if (!hayBilletesSuficientes((int) monto)) {
+
+            auditoria.registrarEvento(
+                    "Retiro rechazado: no hay billetes suficientes"
+            );
+
+            return null;
+        }
+
+
+
+        Cuenta cuenta =
+                usuarioActual.getCuentaSeleccionada();
+
+
+
+        if (cuenta == null) {
+
+            auditoria.registrarEvento(
+                    "Retiro rechazado: no hay cuenta seleccionada"
+            );
+
+            return null;
+        }
+
+
+
+        Transaccion transaccion =
+                cuenta.retirar(monto);
+
+
 
         if (transaccion != null) {
-            Map<Billetes, Integer> entregados = calcularBilletes((int) monto);
-            actualizarBilletes(Objects.requireNonNull(entregados), -1);
+
+
+            Map<Billetes,Integer> entregados =
+                    calcularBilletes((int)monto);
+
+
+
+            actualizarBilletes(
+                    Objects.requireNonNull(entregados),
+                    -1
+            );
+
+
+
+            // MongoDB
             auditoria.registrar(transaccion);
+
+
+
+            // SQL SERVER
+
+            EntidadTransaccion entidad =
+                    new EntidadTransaccion(
+                            transaccion.getTipo(),
+                            transaccion.getMonto(),
+                            cuentaDAO.buscarPorNumero(
+                                    cuenta.getNumeroCuenta()
+                            ),
+                            null
+                    );
+
+
+
+            boolean guardadoSQL =
+                    transaccionDAO.guardar(entidad);
+
+
+
+            if(!guardadoSQL){
+
+                System.err.println(
+                        "Error guardando retiro en SQL Server"
+                );
+
+            }
+
+
+
             transaccion.generarVoucher();
+
         }
+
+
+
         return transaccion;
     }
 
-    public Transaccion depositar(Map<Billetes, Integer> billetesDepositados) {
-        if (usuarioActual == null) return null;
-        double monto = calcularMonto(billetesDepositados);
+    public Transaccion depositar(Map<Billetes,Integer> billetesDepositados) {
 
-        Cuenta cuenta = usuarioActual.getCuentaSeleccionada();
-        Transaccion transaccion = cuenta.depositar(monto);
-        if (transaccion != null) {
-            actualizarBilletes(billetesDepositados, 1);
+
+        if(usuarioActual == null){
+
+            return null;
+
+        }
+
+
+
+        double monto =
+                calcularMonto(billetesDepositados);
+
+
+
+        Cuenta cuenta =
+                usuarioActual.getCuentaSeleccionada();
+
+
+
+        if(cuenta == null){
+
+            return null;
+
+        }
+
+
+
+        Transaccion transaccion =
+                cuenta.depositar(monto);
+
+
+
+        if(transaccion != null){
+
+
+            actualizarBilletes(
+                    billetesDepositados,
+                    1
+            );
+
+
+
+            // MongoDB
+
             auditoria.registrar(transaccion);
+
+
+
+
+            // SQL SERVER
+
+            EntidadTransaccion entidad =
+                    new EntidadTransaccion(
+                            transaccion.getTipo(),
+                            transaccion.getMonto(),
+                            null,
+                            cuentaDAO.buscarPorNumero(
+                                    cuenta.getNumeroCuenta()
+                            )
+                    );
+
+
+            boolean guardadoSQL =
+                    transaccionDAO.guardar(entidad);
+
+
+
+            if(!guardadoSQL){
+
+                System.err.println(
+                        "Error guardando depósito en SQL Server"
+                );
+
+            }
+
         }
+
+
 
         return transaccion;
     }
-
     public List<Transaccion> verHistorial(int dias) {
         if (usuarioActual == null) return new ArrayList<>();
         return usuarioActual.getHistorialReciente(this.auditoria, dias);

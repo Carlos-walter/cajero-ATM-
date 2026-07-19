@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import utils.Sesion;
+import application.model.utils.Sesion;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,10 +35,7 @@ public class MenuController {
     @FXML
     private VBox vboxBloquear;
 
-    /**
-     * Configura los eventos de clic
-     * para cada opción del menú.
-     */
+
     @FXML
     public void initialize() {
 
@@ -97,12 +94,7 @@ public class MenuController {
         }
     }
 
-    /**
-     * Regresa a la pantalla de Login.
-     *
-     * FUTURO:
-     * Limpiar la sesión del usuario.
-     */
+
     private void cerrarSesion() {
 
         Cajero.getInstancia().cerrarSesion();
@@ -112,54 +104,35 @@ public class MenuController {
         cambiarPantalla("/LoginDNI.fxml");
     }
 
-    /**
-     * Abre la pantalla de retiro.
-     */
     private void abrirRetiro() {
 
         cambiarPantalla("/RetirarDinero.fxml");
     }
 
-    /**
-     * Abre la pantalla de transferencia.
-     */
+
     private void abrirTransferencia() {
 
         cambiarPantalla("/Transferencia.fxml");
     }
-    /**
-     * Abre la pantalla para seleccionar
-     * la cuenta del usuario.
-     */
+
     private void abrirCuentaSaldo() {
 
         cambiarPantalla("/CuentaSaldo.fxml");
 
     }
-    /**
-     * Abre la pantalla del historial de movimientos.
-     */
+
     private void abrirHistorial() {
 
         cambiarPantalla("/Historial.fxml");
 
     }
-    //  Abre la pantalla de BloquearCuenta
+
     private void abrirBloquearCuenta() {
 
         cambiarPantalla("/BloquearCuenta.fxml");
     }
 
-    /**
-     * Abre la pantalla para validar
-     * el PIN actual del usuario.
-     *
-     * Flujo futuro:
-     *
-     * Paso 1 -> PIN actual
-     * Paso 2 -> Nuevo PIN
-     * Paso 3 -> Confirmación
-     */
+
     private void abrirCambiarPin() {
 
         cambiarPantalla("/CambiarPin.fxml");
